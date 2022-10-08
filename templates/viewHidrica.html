@@ -1,0 +1,611 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+
+  <div class="card">
+    <div class="card-header text-center">
+      <!-- <h3 class="card-title">
+        Cantidad de agua a aplicar en riego en los últimos {{dias}} días - Estación
+        {{estacionName}} 
+      </h3> -->
+      <h3 class="card-title">
+        Aplicación de riego en los últimos 7 días - Estación {{estacionName}}
+      </h3>
+    </div>
+    <div class="card-body">
+      <h6 class="card-title">Cálculo en función de la evapotranspiración potencial diario en mm o m<sup>3</sup></h6>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card text-center">
+            <div class="card-header card-header-primary">
+              <!-- <h5 class="card-title">
+                ¿He regado bien en los últimos {{dias}} días para tener al bananal sin
+                restricciones hídricas?
+              </h5> -->
+              <h5 class="card-title">
+                Necesidad Hídrica
+              </h5>
+              <p class="card-category"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 flex-column">
+        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+          <!-- <h5>
+            Para el periodo de {{dias}} dias finalizado el {{fechaFinal}} con un sistema de riego por {{riego}}
+            y suelo de textura {{suelo}}, hay que aplicar {{NH}}mm o {{NH2}} metros cúbicos de agua por
+            hectárea 
+          </h5> -->
+          <h5 class="text-center">
+            La aplicación de riego para mantener humedad del 70% en los últimos 7 dias debería ser de {{Rec_LP}} litros por planta (L/Planta)
+            o {{Rec_L_Ha}} litros por hectárea (L/Ha) en un sistema de riego por <strong>{{riego}}</strong>.
+          </h5>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Evapotranspiración del cultivo</h5>
+          <canvas id="chartEvapo" style="width:100% ;height: 30vh"></canvas>
+          <script type="module">
+            function totalCasesChart(ctx) {
+              //const { temp1, temp2 } = data;
+
+              const chart = new Chart(ctx, {
+
+                type: 'line',
+                data: {
+
+                  labels: {{ fechas| safe}},
+            datasets: [
+
+              {
+
+                label: "Evapotranspiración del cultivo",
+                data: {{ evap| safe}},
+              fill: false,
+              borderColor: 'blue',
+              lineTension: 0.1
+                    },
+
+            ]
+                },
+
+            options: {
+              scales: {
+
+                xAxes: [{
+
+                  gridLines: {
+                    display: false,
+                  }
+                }]
+              },
+              responsive: true
+
+
+            },
+            legend: {
+              position: 'bottom',
+                labels: {
+                padding: 20,
+                  boxWidth: 15,
+                    fontFamily: 'system-ui',
+                      fontColor: 'black',
+                  }
+            },
+            layout: {
+              padding: {
+                right: 50,
+      
+                  }
+
+            },
+            tooltips: {
+              backgroundColor: '#0584f6',
+                titleFontSize: 20,
+                  xPaddding: 20,
+                    yPadding: 20,
+                      bodyFontSize: 15,
+                        bodySpacing: 10,
+                          mode: 'x'
+            },
+            elements: {
+
+              line: {
+                borderWidth: 8,
+                  fill: false
+
+              },
+              point: {
+
+                radius: 6,
+                  borderWidth: 4,
+                    backgroundColor: 'white',
+                      hoverRadius: 8,
+                        hoverBorderWidth: 4
+              }
+            }
+      
+      
+              });
+      
+            }
+
+            function renderCharts() {
+
+              const ctx = document.querySelector('#chartEvapo').getContext('2d');
+              totalCasesChart(ctx);
+
+            }
+
+            renderCharts();
+
+          </script>
+
+          <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalEvapo">Ver
+            detalle</button>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+            data-target="#myModalGraficoEvapo">Ampliar gráfico</button>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">LLuvia (mm)</h5>
+          <canvas id="chartlluvias" style="width:100% ;height: 30vh"></canvas>
+          <script type="module">
+            function totalCasesChart(ctx) {
+              //const { temp1, temp2 } = data;
+
+              const chart = new Chart(ctx, {
+
+                type: 'line',
+                data: {
+
+                  labels: {{ fechas| safe}},
+            datasets: [
+
+              {
+
+                label: "Lluvia (mm)",
+                data: {{ rain| safe}},
+              fill: false,
+              borderColor: 'red',
+              lineTension: 0.1
+            },
+
+            ]
+        },
+
+            options: {
+              scales: {
+
+                xAxes: [{
+
+                  gridLines: {
+                    display: false,
+                  }
+                }]
+              },
+              responsive: true
+
+
+            },
+            legend: {
+              position: 'bottom',
+                labels: {
+                padding: 20,
+                  boxWidth: 15,
+                    fontFamily: 'system-ui',
+                      fontColor: 'black',
+          }
+            },
+            layout: {
+              padding: {
+                right: 50,
+
+          }
+
+            },
+            tooltips: {
+              backgroundColor: '#0584f6',
+                titleFontSize: 20,
+                  xPaddding: 20,
+                    yPadding: 20,
+                      bodyFontSize: 15,
+                        bodySpacing: 10,
+                          mode: 'x'
+            },
+            elements: {
+
+              line: {
+                borderWidth: 8,
+                  fill: false
+
+              },
+              point: {
+
+                radius: 6,
+                  borderWidth: 4,
+                    backgroundColor: 'white',
+                      hoverRadius: 8,
+                        hoverBorderWidth: 4
+              }
+            }
+
+
+      });
+
+     }
+
+            function renderCharts() {
+
+              const ctx = document.querySelector('#chartlluvias').getContext('2d');
+              totalCasesChart(ctx);
+
+            }
+
+            renderCharts();
+
+          </script>
+
+          <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalLluvia">Ver
+            detalle</button>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+            data-target="#myModalGraficoLluvia">Ampliar gráfico</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal evapotranspiracion tabla -->
+<div class="modal" tabindex="-1" id="myModalEvapo" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos diarios</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Evapotranspiración del cultivo</td>
+            </tr>
+
+          <tbody>
+            {% for dato in data %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.1}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal ampliacion de grafica de evapotranspiracion -->
+<div class="modal" tabindex="-1" id="myModalGraficoEvapo" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart1gNroHojas" width="50%" height="25vh"></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechas| safe}},
+          datasets: [
+
+            {
+
+              label: "Evapotranspiración del cultivo",
+              data: {{ evap| safe}},
+            fill: false,
+            borderColor: 'blue',
+            lineTension: 0.1
+          },
+
+          ]
+          },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+          }
+          },
+          layout: {
+            padding: {
+              right: 50,
+
+          }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+
+
+          });
+
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart1gNroHojas').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal de lluvia -->
+
+<div class="modal" tabindex="-1" id="myModalLluvia" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos diarios</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Lluvia (mm)</td>
+            </tr>
+
+          <tbody>
+            {% for dato in data %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.2}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal de ampliacion de lluvia -->
+<div class="modal" tabindex="-1" id="myModalGraficoLluvia" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico</h5>
+      </div>
+      <div class="modal-body">
+        <canvas id="chartLluvia" width="50%" height="25vh"></canvas>
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechas| safe}},
+          datasets: [
+
+            {
+
+              label: "Lluvia (mm)",
+              data: {{ rain| safe}},
+            fill: false,
+            borderColor: 'red',
+            lineTension: 0.1
+          },
+
+          ]
+          },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+          }
+          },
+          layout: {
+            padding: {
+              right: 50,
+
+          }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+
+
+          });
+
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chartLluvia').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

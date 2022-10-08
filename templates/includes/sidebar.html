@@ -1,0 +1,246 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
+        <div class="sidebar-brand-icon">
+            <!-- <img src="imgs/logo.png" alt=""> -->
+            <img src="/static/assets/img/logo2.png" alt="">
+            <!-- <img src="static/img/log2.png" alt=""> -->
+        </div>
+        <div class="sidebar-brand-text mx-3"><img src="/static/assets/img/ahora.png" alt=""></div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <!-- <div class="row">
+        <li class="nav-item active">
+            <a class="nav-link" href="/home">
+                <i class="fas fa-fw fa-compass"></i>
+                <span>Inicio</span>
+            </a>
+            <a class="nav-link " href="/home">
+                <i class="fa-solid fa-user"></i>
+                <span>Usuario</span>
+            </a>
+        </li>
+    </div> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <a class="nav-link" style="color: white;" href="/home">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Inicio</span>
+                </a>
+            </div>
+            <div class="col">
+                <a class="nav-link" style="color: white;" href="/usuario">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Usuario</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Variable Agroclima
+    </div>
+
+    <!-- Nav Item - VARIABLES Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            aria-controls="collapseTwo">
+            <!-- <i class='bx fa-fw bxs-leaf'></i> -->
+            <i class="fas fa-fw fa-feather-alt"></i>
+            <span>N° de hojas</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Cálculo de:</h6>
+                <a class="collapse-item" href="/formHojasHijo">-Emisión de hojas <br> del hijo de sucesión</a>
+                <a class="collapse-item" href="/formNroHojas">-Tasa Potencial de <br> Emisión de Hojas</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - GDS Collapse Menu (Tenía el id de N°HOJAS, se le ha colocado el id de pages:"collapsePages. que se encontraba en el separador OTROS(ADDONS))-->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+            aria-controls="collapsePages">
+            <!-- <i class="fas fa-fw fa-cog"></i> -->
+            <i class="fas fa-fw fa-temperature-low"></i>
+            <!-- <span>Components</span> -->
+            <!-- <span>Grados Día (GDS)</span> -->
+            <span>Floración a Cosecha</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <!-- <h6 class="collapse-header">Cálculo con:</h6> -->
+                <!-- <a class="collapse-item" href="buttons.html">-GDS hacia atrás</a> -->
+                <a class="collapse-item" href="/formIndicadoresCosecha">- Estimación fecha de <br> floración</a>
+                <a class="collapse-item" href="/formIndicadoresFloracion">- Estimación fecha de <br> cosecha</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Peso de Racimo -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBiom" aria-expanded="true"
+            aria-controls="collapseBiom">
+            <!-- <i class="fa-solid fa-seedling"></i> -->
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span>Racimo</span>
+        </a>
+        <div id="collapseBiom" class="collapse" aria-labelledby="headingBiom" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Verificación de la <br> productividad:</h6>
+                <a class="collapse-item" href="/formBiomasa">-Ciclos anteriores</a>
+                <a class="collapse-item" href="/formBiomasaProyeccion">-Proyección</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Nutrientes -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFeed" aria-expanded="true"
+            aria-controls="collapseFeed">
+            <!-- <i class="fas fa-fw fa-cog"></i> -->
+            <!-- <i class="fas fa-fw fa-temperature-low"></i> -->
+            <!-- <i class="fa-solid fa-hand-holding-seedling"></i> -->
+            <i class="fa-solid fa-seedling"></i>
+            <!-- <span>Components</span> -->
+            <!-- <span>Grados Día (GDS)</span> -->
+            <span>Nutrientes</span>
+        </a>
+        <div id="collapseFeed" class="collapse" aria-labelledby="headingFeed" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Cálculo de:</h6>
+                <!-- <a class="collapse-item" href="buttons.html">-GDS hacia atrás</a> -->
+                <a class="collapse-item" href="/formNutrientes">-Cantidad de <br> Nutrientes (N, P, K, Ca...)</a>
+                <!-- <a class="collapse-item" href="/formIndicadoresFloracion">-Fecha de floración</a> -->
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Demanda de agua -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <!-- <i class="fas fa-fw fa-wrench"></i> -->
+            <i class="fas fa-fw fa-hand-holding-water"></i>
+            <!-- <i class="fas fa-fw fa-charging-station"></i> -->
+            <!-- <i class="fas fa-fw fa-ruler"></i> -->
+            <!-- <i class="fas fa-fw fa-cloud-sun-rain"></i> -->
+            <!-- <i class='bx fa-fw bxs-tachometer'></i> -->
+            <span>Riego</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <!-- <a class="collapse-item" href="/formHidricaDemanda">-Demanda de agua de <br> banano (7 días)</a> -->
+                <a class="collapse-item" href="/formHidrica">-Demanda de agua y<br> riego</a>
+                <!-- <a class="collapse-item" href="/formHidricaIntervalo">-Intervalo máximo <br>entre riegos</a> -->
+                <!-- <a class="collapse-item" href="utilities-other.html">Other</a> -->
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHistoricos" aria-expanded="true"
+            aria-controls="collapseUtilities">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Variables climáticas</span>
+        </a>
+        <div id="collapseHistoricos" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/historicos">-Monitoreo de <br> variables climáticas</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="true"
+            aria-controls="collapseUtilities">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Soporte</span>
+        </a>
+        <div id="collapseHelp" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/home">-Apoyo al usuario</a>
+                <!-- <a class="collapse-item" href="/EstacionesEstado">-Estado de estaciones</a> -->
+                <a class="collapse-item" href="/EnviarCorreo">-Ayudanos a mejorar</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseComentarios"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>Comentarios</span>
+        </a>
+        <div id="collapseComentarios" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/EnviarCorreo">-Ayudanos a mejorar</a>
+            </div>
+        </div>
+    </li> -->
+
+    <hr class="sidebar-divider">
+    
+    <li class="nav-link text-center">
+        <a  href="{{ url_for('logout')}}" class="btn btn-purple" role="button">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Salir</a>
+    </li>
+    <hr class="sidebar-divider">
+
+
+    <!-- Heading -->
+    <!-- <div class="sidebar-heading">
+      Otros
+  </div> -->
+
+    <!-- Nav Item - Charts -->
+    <!-- <li class="nav-item">
+      <a class="nav-link" href="/"> -->
+    <!-- <i class="fas fa-fw fa-chart-area"></i> -->
+    <!-- <i class='bx fa-fw bxs-book'></i> -->
+    <!-- <i class='bx fa-fw bxs-backpack'></i> -->
+    <!-- <i class='bx fa-fw bxs-food-menu'></i> -->
+    <!-- <span>Manual</span></a>
+  </li> -->
+
+    <!-- Nav Item - Tables -->
+    <!-- <li class="nav-item">
+      <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-table"></i> -->
+    <!-- <i class="fas fa-fw fa-poll-h"></i>
+          <span>Reseñas</span></a>
+  </li> -->
+
+    <!-- Divider -->
+    <!-- <hr class="sidebar-divider d-none d-md-block"> -->
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+    <!-- Sidebar Message -->
+    <div class="sidebar-card d-none d-lg-flex">
+        <!-- <img class="sidebar-card-illustration mb-2" src="imgs/undraw_rocket.svg" alt="..."> -->
+        <img class="sidebar-card-illustration mb-2" src="/static/assets/img/download_app.png" alt="...">
+        <!-- <img class="sidebar-card-illustration mb-2" src="imgs/tablet-716.svg" alt="..."> -->
+        <!-- <img class="sidebar-card-illustration mb-2" src="imgs/smartphone-769.svg" alt="..."> -->
+        <p class="text-center mb-2"><strong>°AHORA App</strong> <br>descárgala en su versión V1.0.0</p>
+    </div>
+
+</ul>

@@ -1,0 +1,158 @@
+{% extends "layouts/base_login.html" %} {% block title %}REGISTRO{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+  <main class="form-signin">
+    <div class="card" style="background-color: #bde5bf;">
+      <div class="card-title pb-0 text-center bg-transparent">
+        <h4 class="font-weight-bolder text-dark text-gradient">
+          Llenar los campos disponibles
+        </h4>
+        <p class="mb-0">
+          {% if message %}
+          <span class="text-danger">{{ message | safe }}</span>
+          {% else %}
+          Agrega tus credenciales
+          {% endif %}
+
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+
+          <span class=flashes>
+            {% for message in messages %}
+            <h4 style="color: red;">{{ message }}</h4>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+          </span>
+        </p>
+
+      </div>
+      <div class="card-body">
+        <form role="form text-left" method="post" action="{{ url_for('register') }}" id="register-form">
+          {{ form.hidden_tag() }}
+
+          <label>Nombres:</label>
+          <div class="mb-3">
+            {{ form.nombres(placeholder="Nombres completos", class="form-control") }}
+          </div>
+          <label>Apellido paterno</label>
+          <div class="mb-3">
+            {{ form.apellido_paterno(placeholder="Apellido paterno", class="form-control") }}
+          </div>
+          <label>Apellido materno</label>
+          <div class="mb-3">
+            {{ form.apellido_materno(placeholder="Apellido materno", class="form-control") }}
+          </div>
+
+          <label>Email</label>
+          <div class="mb-3">
+            {{ form.email(placeholder="ejemplo@gmail.com", class="input form-control", type="email") }}
+          </div>
+          <label>Fecha de nacimiento</label>
+          <div class="mb-3">
+            {{ form.fecNacimiento(placeholder="ejemplo@gmail.com", class="input form-control") }}
+          </div>
+          <label>Ocupación</label>
+          <div class="mb-3">
+            {{ form.ocupacion(placeholder="Gerente, técnico, agricultor, etc.", class="form-control") }}
+          </div>
+
+          <label>Asociación</label>
+          <div class="mb-3">
+            {{ form.asociacion(placeholder="Asociación o cooperativa", class="form-control") }}
+          </div>
+
+          <label>Contraseña</label>
+          <div class="mb-3">
+            {{ form.password1(placeholder="Contraseña", id="password", class="form-control", type="password") }}
+          </div>
+          <label>Repita contraseña</label>
+          <div class="mb-3">
+            {{ form.password2(placeholder="Vuelva a escribir su contraseña",id="confirm-password", class="form-control",
+            type="password") }}
+          </div>
+          <div class="mb-3">
+            <div class="g-recaptcha" width="desired_width" data-sitekey="{{sitekey}}"></div>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" name="register" class="btn text-white w-100 my-4 mb-2"
+              style="background-color: #9c27b0;">REGISTRAR</button>
+          </div>
+
+          <p class="text-sm mt-3 mb-0 text-center">
+            ¿Ya tienes una cuenta? <a href="/" class="font-weight-bolder" style="color:#9c27b0;">INICIAR SESIÓN</a>
+          </p>
+
+        </form>
+
+      </div>
+    </div>
+  </main>
+  {% include "includes/footer-fullscreen.html" %}
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript">
+  function validar_clave(e) {
+      console.log('en function');
+      var caract_invalido = " ";
+      var caract_longitud = 6;
+      var cla1 = $('#register-form #password').val();
+      var cla2 = $('#register-form #confirm-password').val();
+      console.log(cla1);
+      console.log(cla2);
+      if (cla1 == '' || cla2 == '') {
+          alert('Debes introducir tu clave en los dos campos.');
+          //document.registro
+          e.preventDefault();
+          return false;
+      }
+      if (cla1.length < caract_longitud) {
+          alert('Tu clave debe constar de ' + caract_longitud + ' carácteres.');
+          //document.registro
+          e.preventDefault();
+          return false;
+      }
+      if (cla1.indexOf(caract_invalido) > -1) {
+          alert("Las claves no pueden contener espacios");
+          //document.registro
+          e.preventDefault();
+          return false;
+      } else {
+          if (cla1 != cla2) {
+              alert("Las claves introducidas no son iguales");
+              //document.registro
+              e.preventDefault();
+              return false;
+          }
+      }
+  }
+
+  $(function () {
+
+      $('#login-form-link').click(function (e) {
+          $("#login-form").delay(100).fadeIn(100);
+          $("#register-form").fadeOut(100);
+          $('#register-form-link').removeClass('active');
+          $(this).addClass('active');
+          e.preventDefault();
+      });
+      $('#register-form-link').click(function (e) {
+          $("#register-form").delay(100).fadeIn(100);
+          $("#login-form").fadeOut(100);
+          $('#login-form-link').removeClass('active');
+          $(this).addClass('active');
+          e.preventDefault();
+      });
+
+      $('#register-form').submit(function (e) {
+          validar_clave(e);
+      });
+  });
+</script>
+
+{% endblock content %}

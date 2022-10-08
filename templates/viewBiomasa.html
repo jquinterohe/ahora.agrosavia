@@ -1,0 +1,45 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title text-center">Peso potencial de racimo - Estación {{estacionName}} </h3>
+    </div>
+    <div class="card-body">
+      <h6 class="card-title">Estimación del peso potencial del racimo para verificar el rendimiento del cultivo en ciclos anteriores.</h6>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card text-center">
+            <div class="card-header card-header-primary">
+              <h5 class="card-title">Información</h5>
+              <p class="card-category"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 flex-column">
+          <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+            <h5>Para la fecha de cosecha {{fec_string}}, el peso
+              potencial del racimo debió ser de {{biomasa_planta}} kg por planta o {{biomasa}} toneladas por hectárea.
+            </h5>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

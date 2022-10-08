@@ -1,0 +1,119 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+
+  <div>
+    <p class="bg-light text-body h4 text-center">CONSULTAS Y SUGERENCIAS</p>
+  </div>
+  <div class="container">
+    <div class="row mt-lg-n10 mt-md-n11 mt-n10">
+      <div class="col-xl-8 col-lg-5 col-md-7 mx-auto">
+        <div class="card z-index-0" style="background-color:#bde5bf ;">
+          <div class="card-header text-center pt-4" style="background-color:#bde5bf ;">
+          </div>
+          <div class="row px-xl-5 px-sm-4 px-3">
+
+            <div class="mt-2 position-relative text-center">
+              <p class="text-sm font-weight-bold mb-2 text-dark text-border d-inline z-index-2 px-3">
+                {% if msg %}
+                <span class="text-danger">{{ msg | safe }}</span>
+                {% else %}
+                DATOS
+                {% endif %}
+              </p>
+            </div>
+            <div class="container text-white text-center">
+              {% for message in get_flashed_messages() %}
+              <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+              </div>
+              {% endfor %}
+
+              {% block page_content %}{% endblock %}
+            </div>
+          </div>
+          <div class="card-body">
+
+            {% if success %}
+
+            <p class="text-sm mt-3 mb-0 text-center">
+
+            <div class="text-center">
+              <a href="" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign IN</a>
+            </div>
+
+            </p>
+
+            {% else %}
+
+            {{ form.hidden_tag() }}
+            <div class="row">
+              <div class="col">
+                <label for="input1" class="form-label">
+                  Nombres:
+                </label>
+                <input class="form-control" id="input1" type="text" name="nombre_apellido" value=" {{nombres}} "
+                  disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="input2" class="form-label">
+                  Correo electrónico:
+                </label>
+                <input class="form-control" id="input2" type="email" name="email" value=" {{email}} " disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="input3" class="form-label">
+                  Asociación:
+                </label>
+                <input class="form-control" id="input3" type="text" name="asociacion" value=" {{asociacion}} " disabled>
+              </div>
+            </div>
+            <form role="form text-left" method="post" action="{{ url_for('EnviarCorreo') }} ">
+              {{ form.hidden_tag() }}
+              <div class="row">
+                <div class="col">
+                  <label for="mensaje" class="form-label">
+                    Mensaje:
+                  </label>
+                  <textarea class="form-control" name="mensaje" id="mensaje" cols="30" rows="5"
+                    aria-label="With textarea" maxlength="500" required></textarea>
+                </div>
+              </div>
+
+              <div class="g-recaptcha"
+                style="transform: scale(0.7); -webkit-transform: scale(0.7); transform-origin: 0 0; -webkit-transform-origin: 0 0;"
+                data-theme="light" width="desired_width" data-sitekey="{{sitekey}}"></div>
+
+
+              <div class="text-center">
+                <button type="submit" name="register" class="btn text-white w-100 my-4 mb-2"
+                  style="background-color: #9c27b0;">ENVIAR </button>
+              </div>
+            </form>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

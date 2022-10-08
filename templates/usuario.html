@@ -1,0 +1,265 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+    /* Style all input fields */
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+    }
+
+    /* Style the submit button */
+    input[type=submit] {
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    /* Style the container for inputs */
+    .container {
+        background-color: #f1f1f1;
+        padding: 20px;
+    }
+
+    /* The message box is shown when the user clicks on the password field */
+    #message {
+        display: none;
+        background: #f1f1f1;
+        color: #000;
+        position: relative;
+        padding: 20px;
+        margin-top: 10px;
+    }
+
+    #message p {
+        padding: 10px 35px;
+        font-size: 18px;
+    }
+
+    /* Add a green text color and a checkmark when the requirements are right */
+    .valid {
+        color: green;
+    }
+
+    .valid:before {
+        position: relative;
+        left: -35px;
+        content: "✔";
+    }
+
+    /* Add a red text color and an "x" when the requirements are wrong */
+    .invalid {
+        color: red;
+    }
+
+    .invalid:before {
+        position: relative;
+        left: -35px;
+        content: "✖";
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+    {% include 'includes/topbarHide.html' %}
+    <div class="alert alert-success">
+        {% if message %}
+        {% else %}
+        <div class="text-center">
+            <h3 class="card-title">INFORMACIÓN</h3>
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+        <span class=flashes>
+            {% for message in messages %}
+            <div class="text-center">
+                <h3 style="color: rgb(255, 255, 255);">{{ message }}</h3>
+            </div>
+            {% endfor %}
+        </span>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <!-- propuesta -->
+    <div class="card">
+        <div class="container-fluid text-center">
+            <div class="row ">
+                <form method="" id="perfil">
+                    <div class="container-fluid justify-content-center flex-column">
+                        <div class="card-header card-header-primary p-2">
+                            <h2 class="card-title">PERFIL DE USUARIO</h2>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid text-center">
+                <div class="row">
+                    <div class="col">
+                        <label for="input1" class="form-label">
+                            <h4>Nombres y apellidos:</h4>
+                        </label>
+                        <input class="form-control" id="input1" type="text" name="nombre_apellido" value="{{nombres}}"
+                            disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="input2" class="form-label">
+                            <h4>Fecha de nacimiento:</h4>
+                        </label>
+                        <input class="form-control" id="input2" type="date" name="correo" value="{{fecNacimiento}}"
+                            disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="input3" class="form-label">
+                            <h4> Correo electrónico:</h4>
+                        </label>
+                        <input class="form-control" id="input3" type="email" name="correo" value="{{email}}" disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="input4" class="form-label">
+                            <h4>Ocupación:</h4>
+                            </h4>
+                        </label>
+                        <input class="form-control" id="input4" type="text" name="ocupacion" value="{{ocupacion}}"
+                            disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="input5" class="form-label">
+                            <h4>Institución:</h4>
+                        </label>
+                        <input class="form-control" id="input5" type="text" name="asociacion" value="{{asociacion}}"
+                            disabled>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <p class="text-center">
+                <a href="" class="text" style="color:#9c27b0;" data-bs-toggle="modal"
+                    data-bs-target="#myModal">Actualizar contraseña</a>
+            </p>
+        </div>
+
+    </div>
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header text-center">
+                    <h4 class="modal-title">Modificar contraseña</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <form method="post" action="/ActContraseña" id="register-form">
+                    <div class="container">
+                        <label for="floatingInputInvalid">Contraseña:</label>
+                        <div class="mb-3">
+                            {{ form.password1(placeholder="Nueva contraseña", id="password", class="form-control", type="password")}}
+                        </div>
+                    </div>
+                    <div class="container">
+                        <label for="floatingInputInvalid">Repita su contraseña:</label>
+                        <div class="mb-3">
+                            {{ form.password2(placeholder="Vuelva a escribir su nueva contraseña",id="confirm-password", class="form-control", type="password")}}
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-lg btn-block">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    function validar_clave(e) {
+        console.log('en function');
+        var caract_invalido = " ";
+        var caract_longitud = 6;
+        var cla1 = $('#register-form #password').val();
+        var cla2 = $('#register-form #confirm-password').val();
+        console.log(cla1);
+        console.log(cla2);
+        if (cla1 == '' || cla2 == '') {
+            alert('Debes introducir tu clave en los dos campos.');
+            //document.registro
+            e.preventDefault();
+            return false;
+        }
+        if (cla1.length < caract_longitud) {
+            alert('Tu clave debe constar de ' + caract_longitud + ' carácteres.');
+            //document.registro
+            e.preventDefault();
+            return false;
+        }
+        if (cla1.indexOf(caract_invalido) > -1) {
+            alert("Las claves no pueden contener espacios");
+            //document.registro
+            e.preventDefault();
+            return false;
+        } else {
+            if (cla1 != cla2) {
+                alert("Las claves introducidas no son iguales");
+                //document.registro
+                e.preventDefault();
+                return false;
+            }
+        }
+    }
+
+    $(function () {
+
+        $('#login-form-link').click(function (e) {
+            $("#login-form").delay(100).fadeIn(100);
+            $("#register-form").fadeOut(100);
+            $('#register-form-link').removeClass('active');
+            $(this).addClass('active');
+            e.preventDefault();
+        });
+        $('#register-form-link').click(function (e) {
+            $("#register-form").delay(100).fadeIn(100);
+            $("#login-form").fadeOut(100);
+            $('#login-form-link').removeClass('active');
+            $(this).addClass('active');
+            e.preventDefault();
+        });
+
+        $('#register-form').submit(function (e) {
+            validar_clave(e);
+        });
+    });
+</script>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,57 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Número de hojas</h4>
+        <p class="card-category">28 días</p>
+      </div>
+      <div class="card-body">
+        <form action="/tomadato28" method="POST">
+          <div class="form-group">
+            <input type="text" name="dato1" placeholder="Dato1" id="" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="dato2" placeholder="Dato2" id="" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="dato3" placeholder="Dato3" id="" class="form-control">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary w-100">Enviar</button>
+          </div>
+
+
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+
+
+
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>{{valor}}</strong>
+      <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+    </div>
+
+
+
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

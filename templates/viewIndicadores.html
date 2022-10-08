@@ -1,0 +1,2133 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Cálculo del número de hojas del hijo de la planta cosechada - Estación {{estacionName}} </h3>
+  </div>
+  <div class="card-body">
+    <h6 class="card-title">Se realiza el cálculo de las hojas potenciales desde la fecha de cosecha ingresada hasta la fecha actual</h6>
+    <!-- <p class="card-text">Se realiza un cálculo de las hojas potenciales desde la cosecha hasta la fecha actual</p> -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card text-center">
+          <div class="card-header card-header-primary">
+            <h5 class="card-title">Número de hojas</h5>
+            <p class="card-category"></p>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <!-- <h5>Desde la fecha de cosecha {{fechaCosecha}} han crecido: {{valorNroHojas}} hojas potenciales.</h5> -->
+              <h5>   
+                <!-- En función de las condiciones climáticas predisponentes tomando como referencia la fecha de cosecha {{fechaCosecha}}, se espera que se hayan emitido {{valorNroHojas}} hojas verdaderas.-->
+                En estas condiciones climáticas el hijo debe emitir: {{valorNroHojas}} hojas, desde la fecha de cosecha {{fechaCosecha}} de la planta madre. 
+              </h5>
+            </div>
+    
+            
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-6">
+    
+       
+
+
+      </div> -->
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Temperatura</h5>
+            <canvas id="chartTemperaturaNroHojas" style="width:100% ;height: 30vh"></canvas>
+            <script type="module">
+              function totalCasesChart(ctx) {
+                //const { temp1, temp2 } = data;
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechasNroHojas| safe}},
+              datasets: [
+    
+                {
+    
+                  label: "Temperatura promedio",
+                  data: {{ tempPromedioNroHojas| safe}},
+                fill: false,
+                borderColor: 'blue',
+                lineTension: 0.1
+                      },
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black',
+                    }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+        
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+        
+        
+                });
+        
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chartTemperaturaNroHojas').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalTemperaturaNroHojas">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoTemperaturaNroHojas">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Grados día</h5>
+            <canvas id="chartGradosDiaNroHojas" style="width:100% ;height: 30vh"></canvas>
+    
+            <script type="module">
+    
+          
+              function totalCasesChart(ctx) {
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechasNroHojas| safe}},
+              datasets: [
+    
+                {
+                  label: "Grados día Acumulado",
+                  data: {{ gradosDiaNroHojas| safe}},
+                fill: false,
+                borderColor: 'green',
+                lineTension: 0.1
+               // borderDash:[1,10]
+                      },
+    
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+    
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black'
+                }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+    
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+    
+    
+                });
+    
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chartGradosDiaNroHojas').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalGradosdiaNroHojas">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoGradosdiaNroHojas">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+    
+      </div>
+    
+    </div>
+
+
+
+
+
+
+
+
+
+<!-- 
+    <div class="card">
+      <div class="card-header">
+        <h5>Registro de hojas reales</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+    
+          <div class="col-md-6 text-center">
+                  <table class ="table table-sm table-bordered table-hover border-success">
+                          <thead>
+                    
+                              <tr>
+                                 
+                                  <th>Fecha</th>
+                                  <th>Nro Hojas ingresado</th>
+                                  <th>Opciones</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            {% for dato in nroHojasReales %}
+                            <tr>
+                                <td>{{dato.1}}</td>
+                                <td>{{dato.2}}</td>
+                                <td>
+                                    <a href="/deleteNroHojas/{{dato.0}}" class="btn btn-danger btn-sm"> Eliminar </a>
+                                </td>
+            
+                            </tr>
+            
+                            {% endfor %}
+        
+                          </tbody>
+                  </table>
+        
+          </div>
+        
+          <div class="col-md-6 text-center">
+        
+              <form action="/addNroHojas" method="POST">
+        
+                  <div class="form-group">
+                      <input type="text" name="nroHojas" placeholder="Ingrese número de hojas reales" class="form-control">
+                    
+                  </div>
+                  
+                  <button type="submit" class="btn btn-primary"> Guardar</button>
+              </form>
+        
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+   
+
+  </div>
+</div>
+
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Fecha aproximada en la que ocurrió la floración - Estación {{estacionName}}</h3>
+  </div>
+  <div class="card-body">
+    <!-- <h6 class="card-title">Se calcula el número de semanas que le tomó recolectar 900 Grados días acumulados para estimar la fecha de floración anterior</h6> -->
+    <h6 class="card-title">Fecha de floración estimada teniendo en cuenta la acumulación de grados día. </h6>
+    <!-- <p class="card-text">Se calcula el número de semanas que le tomó recolectar 900 Grados días acumulados para estimar la fecha de floración anterior</p> -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card text-center">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Información</h4>
+            <p class="card-category"></p>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <!-- Se acumularon {{valor1B}} GD desde la fecha {{valor2B}} hasta la fecha de cosecha ingresada {{fechaCosecha}}. Le tomó {{valor3B}} semanas -->
+              <h5>
+
+                Tomando como fecha de cosecha el {{fechaCosecha}}, se estima que la fecha aproximada de floración fue el {{valor2B}}. Se acumularon {{valor1B}} grados día en {{valor3B}} semanas.
+            
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row justify-content-center">
+      <h6 class="card-title">A continuación, se informa la variación diaria de la temperatura y la acumulación de grados día, desde la fecha calculada en que ocurrió la floración hasta la fecha de la última cosecha. </h6>
+
+      
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Temperatura</h5>
+            <canvas id="chartTemperaturaBackward" style="width:100% ;height: 30vh"></canvas>
+            <script type="module">
+              function totalCasesChart(ctx) {
+                //const { temp1, temp2 } = data;
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechasBackward| safe}},
+              datasets: [
+    
+                {
+    
+                  label: "Temperatura promedio",
+                  data: {{ tempPromedioBackward| safe}},
+                fill: false,
+                borderColor: 'blue',
+                lineTension: 0.1
+                      },
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black',
+                    }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+        
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+        
+        
+                });
+        
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chartTemperaturaBackward').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalTemperaturaBackward">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoTemperaturaBackward">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Grados día</h5>
+            <canvas id="chartGradosDiaBackward" style="width:100% ;height: 30vh"></canvas>
+    
+            <script type="module">
+    
+          
+              function totalCasesChart(ctx) {
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechasBackward| safe}},
+              datasets: [
+    
+                {
+                  label: "Grados día Acumulado",
+                  data: {{ gradosDiaBackward| safe}},
+                fill: false,
+                borderColor: 'green',
+                lineTension: 0.1
+               // borderDash:[1,10]
+                      },
+    
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+    
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black'
+                }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+    
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+    
+    
+                });
+    
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chartGradosDiaBackward').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalGradosdiaBackward">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoGradosdiaBackward">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+    
+      </div>
+    
+    </div>
+
+
+
+  </div>
+</div>
+
+
+
+
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Estimación de la próxima fecha de cosecha - Estación {{estacionName}}</h3>
+  </div>
+  <div class="card-body">
+    <h6 class="card-title">Fecha de cosecha proyectada según acumulación de grados día desde floración.</h6>
+    <!-- <p class="card-text">Se proyecta una fecha estimada de cosecha partiendo de la fecha de floración ingresada</p> -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card text-center">
+          <div class="card-header card-header-primary">
+            <h5 class="card-title">Información</h5>
+            <p class="card-category"></p>
+          </div>
+           <div class="card-body">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <h5>Desde la fecha de floración {{valor2}} se han acumulado {{valor1}} grados día. Se espera completar 900 grados día el {{valor3}}. Faltan {{estimacion}} días (Aprox. {{nroSemanas}} semanas) para la fecha óptima de cosecha. </h5>
+          <!-- <h5>{{valor1}} grados día acumulados desde floración {{valor2}}. Se espera completar 900 grados día el {{valor3}}. Faltan {{estimacion}} días para la fecha óptima de cosecha. </h5> -->
+
+        </div>
+          </div> 
+        </div>
+      </div>
+      
+    
+    
+    </div>
+    
+    <div class="row">
+      <h6 class="card-title">Variación de temperatura, humedad relativa y acumulación de grados día, desde floración {{valor2}} hasta el día anterior a la fecha de consulta. </h6>
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Temperatura</h5>
+            <canvas id="chart1" style="width:100% ;height: 30vh"></canvas>
+            <script type="module">
+              function totalCasesChart(ctx) {
+                //const { temp1, temp2 } = data;
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechas| safe}},
+              datasets: [
+    
+                {
+    
+                  label: "Temperatura promedio",
+                  data: {{ tempPromedio| safe}},
+                fill: false,
+                borderColor: 'blue',
+                lineTension: 0.1
+                      },
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black',
+                    }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+        
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+        
+        
+                });
+        
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chart1').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalTemperatura">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoTemperatura">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Humedad relativa</h5>
+            <canvas id="chart2" style="width:100% ;height: 30vh"></canvas>
+            <script type="module">
+              function totalCasesChart(ctx) {
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechas| safe}},
+              datasets: [
+    
+                {
+    
+                  label: "Humedad relativa",
+                  data: {{ humedad| safe}},
+                fill: false,
+                borderColor: 'rgb(75,192, 192)',
+                lineTension: 0.1
+                      },
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black',
+                    }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+        
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+        
+        
+                });
+        
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chart2').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalHumedad">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoHumedad">Ampliar gráfico</button>
+          </div>
+        </div>
+    
+      </div>
+    
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Grados día</h5>
+            <canvas id="chart3" style="width:100% ;height: 30vh"></canvas>
+    
+            <script type="module">
+    
+          
+              function totalCasesChart(ctx) {
+    
+                const chart = new Chart(ctx, {
+    
+                  type: 'line',
+                  data: {
+    
+                    labels: {{ fechas| safe}},
+              datasets: [
+    
+                {
+                  label: "Grados día Acumulado",
+                  data: {{ gradosDia| safe}},
+                fill: false,
+                borderColor: 'green',
+                lineTension: 0.1
+               // borderDash:[1,10]
+                      },
+    
+    
+              ]
+                  },
+    
+              options: {
+                scales: {
+    
+                  xAxes: [{
+    
+                    gridLines: {
+                      display: false,
+                    }
+                  }]
+                },
+                responsive: true
+    
+    
+              },
+              legend: {
+                position: 'bottom',
+                  labels: {
+    
+                  padding: 20,
+                    boxWidth: 15,
+                      fontFamily: 'system-ui',
+                        fontColor: 'black'
+                }
+              },
+              layout: {
+                padding: {
+                  right: 50,
+    
+                    }
+    
+              },
+              tooltips: {
+                backgroundColor: '#0584f6',
+                  titleFontSize: 20,
+                    xPaddding: 20,
+                      yPadding: 20,
+                        bodyFontSize: 15,
+                          bodySpacing: 10,
+                            mode: 'x'
+              },
+              elements: {
+    
+                line: {
+                  borderWidth: 8,
+                    fill: false
+    
+                },
+                point: {
+    
+                  radius: 6,
+                    borderWidth: 4,
+                      backgroundColor: 'white',
+                        hoverRadius: 8,
+                          hoverBorderWidth: 4
+                }
+              }
+    
+    
+                });
+    
+              }
+    
+              function renderCharts() {
+    
+                const ctx = document.querySelector('#chart3').getContext('2d');
+                totalCasesChart(ctx);
+    
+              }
+    
+              renderCharts();
+    
+            </script>
+    
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalGradosdia">Ver
+              detalle</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+              data-target="#myModalGraficoGradosdia">Ampliar gráfico</button>
+    
+          </div>
+        </div>
+    
+      </div>
+    
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<!-- Modal NroHojas -->
+
+<div class="modal" tabindex="-1" id="myModalTemperaturaNroHojas" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos de temperatura</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Temperatura promedio</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletosNroHojas %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.1}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoTemperaturaNroHojas" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico Temperatura</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart1gNroHojas"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechasNroHojas| safe}},
+          datasets: [
+
+            {
+
+              label: "Temperatura promedio",
+              data: {{ tempPromedioNroHojas| safe}},
+            fill: false,
+            borderColor: 'blue',
+            lineTension: 0.1
+                  },
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart1gNroHojas').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGradosdiaNroHojas" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos grados día acumulado</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Grados día acumulados</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletosNroHojas %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.2}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoGradosdiaNroHojas" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico grados día</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart3gNroHojas"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechasNroHojas| safe}},
+          datasets: [
+            {
+
+              label: "Grados día Acumulado",
+              data: {{ gradosDiaNroHojas| safe}},
+            fill: false,
+            borderColor: 'green',
+            lineTension: 0.1
+                  },
+
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart3gNroHojas').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Modal Backward -->
+
+<div class="modal" tabindex="-1" id="myModalTemperaturaBackward" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos de temperatura</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Temperatura promedio</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletosBackward %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.1}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoTemperaturaBackward" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico Temperatura</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart1gBackward"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechasBackward| safe}},
+          datasets: [
+
+            {
+
+              label: "Temperatura promedio",
+              data: {{ tempPromedioBackward| safe}},
+            fill: false,
+            borderColor: 'blue',
+            lineTension: 0.1
+                  },
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart1gBackward').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGradosdiaBackward" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos grados día acumulado</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Grados día acumulados</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletosBackward %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.2}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoGradosdiaBackward" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico grados día</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart3gBackward"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechasBackward| safe}},
+          datasets: [
+            {
+
+              label: "Grados día Acumulado",
+              data: {{ gradosDiaBackward| safe}},
+            fill: false,
+            borderColor: 'green',
+            lineTension: 0.1
+                  },
+
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart3gBackward').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal Forward -->
+<div class="modal" tabindex="-1" id="myModalTemperatura" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos de temperatura</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Temperatura promedio</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletos %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.1}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoTemperatura" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico Temperatura</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart1g"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechas| safe}},
+          datasets: [
+
+            {
+
+              label: "Temperatura promedio",
+              data: {{ tempPromedio| safe}},
+            fill: false,
+            borderColor: 'blue',
+            lineTension: 0.1
+                  },
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart1g').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalHumedad" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos de humedad relativa</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Humedad relativa</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletos %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.2}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoHumedad" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico humedad relativa</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart2g"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechas| safe}},
+          datasets: [
+            {
+              label: "Humedad relativa",
+              data: {{ humedad| safe}},
+            fill: false,
+            borderColor: 'rgb(75,192, 192)',
+            lineTension: 0.1
+                  },
+
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart2g').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGradosdia" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Datos grados día acumulado</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered bg-white table-sm">
+          <thead>
+            <tr>
+              <td>Fecha</td>
+              <td>Grados día acumulados</td>
+            </tr>
+
+          <tbody>
+            {% for dato in datosCompletos %}
+            <tr>
+              <td>{{dato.0}}</td>
+              <td>{{dato.3}}</td>
+
+            </tr>
+
+            {% endfor %}
+
+          </tbody>
+          </thead>
+        </table>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="myModalGraficoGradosdia" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-lg">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title">Gráfico grados día</h5>
+      </div>
+      <div class="modal-body">
+
+        <canvas id="chart3g"  width="50%" height="25vh""></canvas>
+
+        <script type="module">
+          function totalCasesChart(ctx) {
+            //const { temp1, temp2 } = data;
+
+            const chart = new Chart(ctx, {
+
+              type: 'line',
+              data: {
+
+                labels: {{ fechas| safe}},
+          datasets: [
+            {
+
+              label: "Grados día Acumulado",
+              data: {{ gradosDia| safe}},
+            fill: false,
+            borderColor: 'green',
+            lineTension: 0.1
+                  },
+
+
+          ]
+              },
+
+          options: {
+            scales: {
+
+              xAxes: [{
+
+                gridLines: {
+                  display: false,
+                }
+              }]
+            },
+
+
+          },
+          legend: {
+            position: 'bottom',
+              labels: {
+              padding: 20,
+                boxWidth: 15,
+                  fontFamily: 'system-ui',
+                    fontColor: 'black',
+                }
+          },
+          layout: {
+            padding: {
+              right: 50,
+    
+                }
+
+          },
+          tooltips: {
+            backgroundColor: '#0584f6',
+              titleFontSize: 20,
+                xPaddding: 20,
+                  yPadding: 20,
+                    bodyFontSize: 15,
+                      bodySpacing: 10,
+                        mode: 'x'
+          },
+          elements: {
+
+            line: {
+              borderWidth: 8,
+                fill: false
+
+            },
+            point: {
+
+              radius: 6,
+                borderWidth: 4,
+                  backgroundColor: 'white',
+                    hoverRadius: 8,
+                      hoverBorderWidth: 4
+            }
+          }
+    
+    
+            });
+    
+          }
+
+          function renderCharts() {
+
+            const ctx = document.querySelector('#chart3g').getContext('2d');
+            totalCasesChart(ctx);
+
+          }
+
+          renderCharts();
+
+        </script>
+
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

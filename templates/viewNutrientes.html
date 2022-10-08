@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+
+  <div class="card">
+    <div class="card-header text-center">
+      <h3 class="card-title">Demanda de nutrientes - Estación {{estacionName}} </h3>
+    </div>
+    <div class="card-body">
+      <h6 class="card-title">Cantidad de nutrientes a reponer para suplir la extracción de nutrientes por la fruta</h6>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card text-center">
+            <div class="card-header card-header-primary">
+              <h5 class="card-title">Información</h5>
+              <p class="card-category"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 flex-column">
+        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+          <h5>Para suplir los nutrientes extraídos por la fruta, se debe reponer en el siguiente ciclo productivo
+            las cantidades de nutrientes relacionadas a continuación:
+          </h5>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-body">
+              <table class="table table-striped table-bordered bg-white table-sm">
+                <thead>
+                  <tr>
+                    <td>Nutrientes</td>
+                    <td>Por planta(g)</td>
+                    <td>Por hectárea(Kg)</td>
+                  </tr>
+
+                <tbody>
+                  {% for dato in tupla %}
+                  <tr>
+                    <td>{{dato.0}}</td>
+                    <td>{{dato.1}}</td>
+                    <td>{{dato.2}}</td>
+
+                  </tr>
+
+                  {% endfor %}
+
+                </tbody>
+                </thead>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-12 flex-column">
+        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+          <h5>Estos nutrientes se pueden aplicar fraccionados (mensual, trimestral,
+            semestral o según su plan de nutrición) en función de la disponibilidad de riego en su finca. Recuerde que
+            la aplicación de fertilizantes debe realizarse con el suelo húmedo.</h5>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+  
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

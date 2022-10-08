@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+    {% include 'includes/topbarHide.html' %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-center">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title">CONSULTAS Y SUGERENCIAS</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 flex-column">
+                    <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+                        <h5 class="text-center">EL MENSAJE FUE ENVIADO CORRECTAMENTE
+                        </h5>
+                        <h5 class="text-center">MUCHAS GRACIAS!
+                        </h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <li class="nav-link text-center">
+            <a  href="{{ url_for('home')}}" class="btn btn-purple" role="button">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+                Regresar a página principal
+            </a>
+        </li>
+    </div>
+
+    <!-- <div>
+        <p class="bg-light text-body h4 text-center">CONSULTAS Y SUGERENCIAS</p>
+    </div>
+    <div class="container">
+        <div class="row mt-lg-n10 mt-md-n11 mt-n10">
+            <div class="col-xl-8 col-lg-5 col-md-7 mx-auto">
+                <div class="card z-index-0" style="background-color:#bde5bf ;">
+                    <div class="row px-xl-5 px-sm-4 px-3">
+
+                        <div class="mt-2 position-relative text-center">
+                            <p class="text-sm font-weight-bold mb-2 text-dark text-border d-inline z-index-2 px-3">
+                                {% if msg %}
+                                <span class="text-danger">{{ msg | safe }}</span>
+                                {% else %}
+                                EL MENSAJE FUE ENVIADO CORRECTAMENTE
+                                MUCHAS GRACIAS!
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

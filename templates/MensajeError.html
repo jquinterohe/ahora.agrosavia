@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+    {% include 'includes/topbarHide.html' %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-center">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title">CONSULTAS Y SUGERENCIAS</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 flex-column">
+                    <div class="alert alert-danger alert-dismissible fade show p-2" role="alert">
+                        <h5 class="text-center"> ¡NO SE PUDO ENVIAR EL MENSAJE POR FAVOR VOLVER A INTENTAR!
+                        </h5>
+                        <h5 class="text-center">
+                        </h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,110 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+  
+  <div><p class="bg-light text-body h4">Nutrientes por aplicar para mantener un crecimiento adecuado del cultivo. Estimación calculada en función de la radiación solar y extracción de nutrientes por la fruta.</p></div>
+  <div class="row mt-5">
+      <!-- {% with messages = get_flashed_messages() %}
+
+      {% if messages %}
+      {% for mensaje in messages %}
+
+
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>{{mensaje}}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      {% endfor %}
+      {% endif %}
+      {% endwith %} -->
+    <div class="col-md-2">
+            <!-- <table class ="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                          
+                            <th>Fecha</th>
+                            <th>Nro Hojas ingresado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                  
+                    </tbody>
+            </table> -->
+
+    </div> 
+
+    <div class="col-md-6">
+    
+        <form action="/viewNutrientes" method="POST" class="align-items-center">
+          <div class="form-group"> Seleccionar estación meteorológica de interés:
+            <!-- <select id="" name="cmbTipoCaja" class="form-control">
+              <option value="1">AMPRO</option>
+              <option value="2">IREN</option>
+            </select> -->
+            <select id="" name="cmbEstacion" class="form-control">
+              <option value="1">Fundación</option>
+              <!-- <option value="2">Estación HATILLO PALMA</option>
+              <option value="3">Estación HATO AL MEDIO</option> -->
+            </select>
+          </div>
+
+          <!-- <div class="form-group">
+              Fecha de floración: <input type="text" name="fechaFloracion" placeholder="Ingrese fecha de floración, ejemplo: 1/06/2021" class="form-control">
+
+          </div> -->
+          <div class="form-group">
+
+            <!-- Densidad de plantas de banano por hectárea: <input type="text" name="rPa" placeholder="" class="form-control"> -->
+            {{form.fechaCosecha.label(class='bmd-label-floating')}}
+            <br>
+            {{form.fechaCosecha}} {{form.hidden_tag()}}
+              {%for error in form.fechaCosecha.errors %} 
+                  <span style="color: red;">{{error}}</span>
+              {% endfor %}
+          </div>
+
+            <div class="form-group">
+
+              <!-- Densidad de plantas de banano por hectárea: <input type="text" name="rPa" placeholder="" class="form-control"> -->
+              {{form.rPa.label(class='bmd-label-floating')}}
+              <br>
+              {{form.rPa}} {{form.hidden_tag()}}
+                {%for error in form.rPa.errors %} 
+                    <span style="color: red;">{{error}}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+
+              <!-- Ciclo productivo (semanas): <input type="text" name="intervalo" placeholder="" class="form-control"> -->
+              {{form.intervalo.label(class='bmd-label-floating')}}
+              <br>
+              {{form.intervalo}} {{form.hidden_tag()}}
+                {%for error in form.intervalo.errors %} 
+                    <span style="color: red;">{{error}}</span>
+                {% endfor %}
+
+            </div>
+            <div class="form-group">
+            <button type="submit" class="btn btn-purple"> Calcular datos</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+

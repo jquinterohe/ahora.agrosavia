@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Grados días Backward</h4>
+        <p class="card-category"></p>
+      </div>
+      <div class="card-body">
+        <!-- <form action="/tomadato14" method="POST">
+          <div class="form-group">
+            <input type="text" name="dato1" placeholder="Dato1" id="" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="dato2" placeholder="Dato2" id="" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="dato3" placeholder="Dato3" id="" class="form-control">
+          </div>
+          <div class="form-group">
+
+            <div class="form-outline datetimepicker">
+              <input type="text" name="fecha" class="form-control" value="2021-09-15" id="datetimepickerExample"/>
+              <label for="datetimepickerExample" class="form-label">Escriba Fecha</label>
+            </div>
+
+
+
+
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary w-100">Enviar</button>
+          </div>
+
+
+
+        </form> -->
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+
+
+
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Se han acumulado {{valor1}} GD desde la fecha {{valor2}} y le ha tomado {{valor3}} semanas</strong>
+      <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+    </div>
+
+    <!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>En los últimos 28 días han crecido: {{valor2}} hojas potenciales</strong>
+     
+    </div> -->
+
+
+
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

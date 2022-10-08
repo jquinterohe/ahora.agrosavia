@@ -1,0 +1,70 @@
+
+html,
+body {
+  height: 100% !important;
+}
+
+body {
+  display: flex !important;
+  align-items: center !important;
+  padding-top: 10px !important; 
+  padding-bottom: 10px !important;
+  background-color: #f7f5f5 !important;
+}
+
+.container-fluid{
+  margin: auto !important;
+}
+
+.form-signin {
+  width: 100% !important;
+  max-width: 430px !important;
+  padding: 5px !important;
+  margin: auto !important;
+}
+
+.form-signin .checkbox {
+  font-weight: 400 !important;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2 !important;
+}
+
+.form-signin input[type="user"] {
+  margin-bottom: -1px !important;
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.card{
+  padding: 1.5em .5em .5em;
+  border-radius: 2em;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+.card-title{
+  font-weight: 700;
+  font-size: 1.5em;
+}
+.btn{
+  border-radius:2em;
+  background-color:#9c27b0;
+  color: #ffffff;
+  padding: .5em 1.5em;
+}
+.btn:hover {
+background-color:#761a87;
+color: #ffffff;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.text:hover {
+  color:#761a87;
+  font-weight: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }

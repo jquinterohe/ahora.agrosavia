@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div id="content-wrapper" class="d-flex flex-column ubicacion">
+
+  {% include 'includes/topbarHide.html' %}
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Peso potencial de racimo - Estación {{estacionName}} </h3>
+    </div>
+    <div class="card-body">
+      <h6 class="card-title">Estimación del peso potencial del racimo para proyectar la productividad del cultivo.
+        Cálculo en función de la radiación solar:</h6>
+      <!-- <p class="card-text">Se realiza un cálculo de las hojas potenciales desde la cosecha hasta la fecha actual</p> -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card text-center">
+            <div class="card-header card-header-primary">
+              <h5 class="card-title">Información</h5>
+              <p class="card-category"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 flex-column">
+        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+          <h5>Para la fecha de floración {{fec}} se estima que la cosecha debió ser el {{fec_final}} con un peso
+            potencial del racimo de
+            {{biomasa_planta}} kg por planta o {{biomasa}} toneladas por hectárea en un periodo de llenado de
+            {{semanas}} semanas.
+          </h5>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
