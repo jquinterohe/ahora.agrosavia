@@ -588,13 +588,13 @@ def viewHistoricos():
         session['estacion'] = estacion
         session['fechaInicio'] = fechaInicio
         fechaInicio = funcionesGenerales.cambiar_formato_fecha(fechaInicio)
-        print("fecha inicio:", fechaInicio)
+        #print("fecha inicio:", fechaInicio)
         dict_estaciones = {"1": "Fundación", "2": "otras"}
         estacionName = dict_estaciones[estacion]
         session['estacionName'] = estacionName
         # nuevo
         dataGraficasNroHojas = funcionesGenerales.historicos(fechaInicio, int(estacion))
-        print("data:", dataGraficasNroHojas)
+        #print("data:", dataGraficasNroHojas)
         session['dataGraficasNroHojas'] = dataGraficasNroHojas
         fechasNroHojas = [row[0] for row in dataGraficasNroHojas]
         temp = [row[1] for row in dataGraficasNroHojas]
@@ -605,7 +605,7 @@ def viewHistoricos():
         et = [row[6] for row in dataGraficasNroHojas]
         # fin nuevo
         
-        return render_template('viewHistoricos.html', fechaInicio=fechaInicio,fechasNroHojas=fechasNroHojas, temp=temp, humedad=humedad, viento =viento,radiacion=radiacion, dataGraficasNroHojas=dataGraficasNroHojas, estacionName=estacionName)
+        return render_template('viewHistoricos.html', fechaInicio=fechaInicio,fechasNroHojas=fechasNroHojas, temp=temp, humedad=humedad, viento =viento,radiacion=radiacion, precipitacion=precipitacion, et=et, dataGraficasNroHojas=dataGraficasNroHojas, estacionName=estacionName)
 
 
 
@@ -668,7 +668,7 @@ def MensajeEnviado():
 def MensajeError():
     return render_template("MensajeError.html")
 
-""" @app.errorhandler(Exception)
+@app.errorhandler(Exception)
 def handle_exception(e):
     # pass through HTTP errors
     if isinstance(e, HTTPException):
@@ -687,7 +687,7 @@ def antes_de_cada_peticion():
         flash("Inicia sesión para continuar")
         return redirect(url_for('login'))
     else:
-        print("funcionamiento correcto") """
+        print("funcionamiento correcto")
 
 import funcionesGenerales
 import primeraFuncion

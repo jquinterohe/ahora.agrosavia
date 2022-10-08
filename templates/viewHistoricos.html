@@ -10,18 +10,18 @@
 <div id="content-wrapper" class="d-flex flex-column ubicacion">
     {% include 'includes/topbarHide.html' %}
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card text-center">
-                    <div class="card-header card-header-primary">
-                        <h5 class="card-title">Monitoreo de variables climáticas - Estación
-                            {{estacionName}}</h5>
-                        <p class="card-category"></p>
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card text-center">
+                <div class="card-header card-header-primary">
+                    <h5 class="card-title">Monitoreo de variables climáticas - Estación
+                        {{estacionName}}</h5>
+                    <p class="card-category"></p>
                 </div>
             </div>
         </div>
-    
+    </div>
+
     <!-- grafico de temperatura y humedad -->
     <div class="row justify-content-center">
         <div class="col-md-4">
@@ -139,8 +139,8 @@
         <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">Grados día</h5>
-                    <canvas id="chartGradosDiaNroHojas" style="width:100% ;height: 30vh"></canvas>
+                    <h5 class="card-title">Humedad relativa</h5>
+                    <canvas id="charthumedad" style="width:100% ;height: 30vh"></canvas>
 
                     <script type="module">
 
@@ -156,7 +156,7 @@
                         datasets: [
 
                             {
-                                label: "Grados día Acumulado",
+                                label: "Humedad relativa",
                                 data: {{ humedad| safe}},
                             fill: false,
                             borderColor: 'green',
@@ -232,7 +232,7 @@
 
                         function renderCharts() {
 
-                            const ctx = document.querySelector('#chartGradosDiaNroHojas').getContext('2d');
+                            const ctx = document.querySelector('#charthumedad').getContext('2d');
                             totalCasesChart(ctx);
 
                         }
@@ -242,10 +242,10 @@
                     </script>
 
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                        data-target="#myModalGradosdiaNroHojas">Ver
+                        data-target="#myModalHumedad">Ver
                         detalle</button>
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                        data-target="#myModalGraficoGradosdiaNroHojas">Ampliar gráfico</button>
+                        data-target="#myModalGraficohumedad">Ampliar gráfico</button>
 
                 </div>
             </div>
@@ -255,7 +255,7 @@
     </div>
 
 
-    <!-- Modal NroHojas -->
+    <!-- Modal temperatura humedad -->
     <div class="modal" tabindex="-1" id="myModalTemperaturaNroHojas" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
@@ -263,7 +263,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Datos de temperatura</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped table-bordered bg-white table-sm">
@@ -305,7 +305,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Gráfico Temperatura</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
 
@@ -418,21 +418,21 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="myModalGradosdiaNroHojas" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal" tabindex="-1" id="myModalHumedad" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
 
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Datos grados día acumulado</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped table-bordered bg-white table-sm">
                         <thead>
                             <tr>
                                 <td>Fecha</td>
-                                <td>Grados día acumulados</td>
+                                <td>Humedad relativa</td>
                             </tr>
 
                         <tbody>
@@ -460,14 +460,14 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="myModalGraficoGradosdiaNroHojas" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal" tabindex="-1" id="myModalGraficohumedad" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog-lg">
 
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Gráfico grados día</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
 
@@ -486,7 +486,7 @@
                         datasets: [
                             {
 
-                                label: "Grados día Acumulado",
+                                label: "Humedad relativa",
                                 data: {{ humedad| safe}},
                             fill: false,
                             borderColor: 'green',
@@ -580,7 +580,7 @@
         </div>
     </div>
 
-    
+
     <!-- grafico de viento y radiacion -->
     <div class="row justify-content-center">
         <div class="col-md-4">
@@ -814,7 +814,7 @@
     </div>
 
 
-    <!-- Modal viento -->
+    <!-- Modal viento y radiacion -->
     <div class="modal" tabindex="-1" id="myModalradiacion" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
@@ -822,14 +822,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Datos de radiacion</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped table-bordered bg-white table-sm">
                         <thead>
                             <tr>
                                 <td>Fecha</td>
-                                <td>Radiacion</td>
+                                <td>Radiacion solar (w/m2)</td>
                             </tr>
 
                         <tbody>
@@ -864,7 +864,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Gráfico solar (w/m2)</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
 
@@ -884,7 +884,7 @@
 
                             {
 
-                                label: "Radiación diaria",
+                                label: "Radiación solar",
                                 data: {{ radiacion| safe}},
                             fill: false,
                             borderColor: 'orange',
@@ -977,14 +977,13 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="myModalViento" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+    <div class="modal" tabindex="-1" id="myModalViento" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
 
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Datos de la velocidad del viento</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped table-bordered bg-white table-sm">
@@ -1026,7 +1025,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h5 class="modal-title">Gráfico de la velocidad del viento</h5>
+                    <h5 class="modal-title">Cerrar</h5>
                 </div>
                 <div class="modal-body">
 
@@ -1138,7 +1137,563 @@
 
         </div>
     </div>
- -->
+
+    <!-- grafico et y preciptacion -->
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Precipitación</h5>
+                    <canvas id="chartPrecipitacion" style="width:100% ;height: 30vh"></canvas>
+                    <script type="module">
+                        function totalCasesChart(ctx) {
+                            //const { temp1, temp2 } = data;
+
+                            const chart = new Chart(ctx, {
+
+                                type: 'line',
+                                data: {
+
+                                    labels: {{ fechasNroHojas| safe}},
+                        datasets: [
+
+                            {
+
+                                label: "Precipitación",
+                                data: {{ precipitacion| safe}},
+                            fill: false,
+                            borderColor: 'black',
+                            lineTension: 0.1
+                    },
+
+                        ]
+                },
+
+                        options: {
+                            scales: {
+
+                                xAxes: [{
+
+                                    gridLines: {
+                                        display: false,
+                                    }
+                                }]
+                            },
+                            responsive: true
+
+
+                        },
+                        legend: {
+                            position: 'bottom',
+                                labels: {
+                                padding: 20,
+                                    boxWidth: 15,
+                                        fontFamily: 'system-ui',
+                                            fontColor: 'black',
+                  }
+                        },
+                        layout: {
+                            padding: {
+                                right: 50,
+      
+                  }
+
+                        },
+                        tooltips: {
+                            backgroundColor: '#0584f6',
+                                titleFontSize: 20,
+                                    xPaddding: 20,
+                                        yPadding: 20,
+                                            bodyFontSize: 15,
+                                                bodySpacing: 10,
+                                                    mode: 'x'
+                        },
+                        elements: {
+
+                            line: {
+                                borderWidth: 8,
+                                    fill: false
+
+                            },
+                            point: {
+
+                                radius: 6,
+                                    borderWidth: 4,
+                                        backgroundColor: 'white',
+                                            hoverRadius: 8,
+                                                hoverBorderWidth: 4
+                            }
+                        }
+      
+      
+              });
+      
+            }
+
+                        function renderCharts() {
+
+                            const ctx = document.querySelector('#chartPrecipitacion').getContext('2d');
+                            totalCasesChart(ctx);
+
+                        }
+
+                        renderCharts();
+
+                    </script>
+
+                    <!-- <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="myModalTemperatura">Ver detalle</a> -->
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#myModalPrecipitacion">Ver
+                        detalle</button>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#myModalGraficoPrecipitacion">Ampliar gráfico</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Evapotranspiración</h5>
+                    <canvas id="chartET" style="width:100% ;height: 30vh"></canvas>
+
+                    <script type="module">
+
+
+                        function totalCasesChart(ctx) {
+
+                            const chart = new Chart(ctx, {
+
+                                type: 'line',
+                                data: {
+
+                                    labels: {{ fechasNroHojas| safe}},
+                        datasets: [
+
+                            {
+                                label: "Evapotranspiración",
+                                data: {{ et| safe}},
+                            fill: false,
+                            borderColor: 'blue',
+                            lineTension: 0.1
+            // borderDash:[1,10]
+                    },
+
+
+                        ]
+                },
+
+                        options: {
+                            scales: {
+
+                                xAxes: [{
+
+                                    gridLines: {
+                                        display: false,
+                                    }
+                                }]
+                            },
+                            responsive: true
+
+
+                        },
+                        legend: {
+                            position: 'bottom',
+                                labels: {
+
+                                padding: 20,
+                                    boxWidth: 15,
+                                        fontFamily: 'system-ui',
+                                            fontColor: 'black'
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                right: 50,
+  
+                  }
+
+                        },
+                        tooltips: {
+                            backgroundColor: '#0584f6',
+                                titleFontSize: 20,
+                                    xPaddding: 20,
+                                        yPadding: 20,
+                                            bodyFontSize: 15,
+                                                bodySpacing: 10,
+                                                    mode: 'x'
+                        },
+                        elements: {
+
+                            line: {
+                                borderWidth: 8,
+                                    fill: false
+
+                            },
+                            point: {
+
+                                radius: 6,
+                                    borderWidth: 4,
+                                        backgroundColor: 'white',
+                                            hoverRadius: 8,
+                                                hoverBorderWidth: 4
+                            }
+                        }
+  
+  
+              });
+  
+            }
+
+                        function renderCharts() {
+
+                            const ctx = document.querySelector('#chartET').getContext('2d');
+                            totalCasesChart(ctx);
+
+                        }
+
+                        renderCharts();
+
+                    </script>
+
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModalet">Ver
+                        detalle</button>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                        data-target="#myModalGraficoet">Ampliar gráfico</button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Modal precipitacion y evapotranspiracion -->
+
+    <div class="modal" tabindex="-1" id="myModalPrecipitacion" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title">Cerrar</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered bg-white table-sm">
+                        <thead>
+                            <tr>
+                                <td>Fecha</td>
+                                <td>Precipitación(mm)</td>
+                            </tr>
+
+                        <tbody>
+                            {% for dato in dataGraficasNroHojas %}
+                            <tr>
+                                <td>{{dato.0}}</td>
+                                <td>{{dato.5}}</td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                        </thead>
+                    </table>
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="myModalGraficoPrecipitacion" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog-lg">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title">Cerrar</h5>
+                </div>
+                <div class="modal-body">
+
+                    <canvas id="chart3gprecipitacion" width="50%" height="25vh"></canvas>
+
+                    <script type="module">
+                        function totalCasesChart(ctx) {
+                            //const { temp1, temp2 } = data;
+
+                            const chart = new Chart(ctx, {
+
+                                type: 'line',
+                                data: {
+
+                                    labels: {{ fechasNroHojas| safe}},
+                        datasets: [
+                            {
+
+                                label: "Precipitación",
+                                data: {{ precipitacion| safe}},
+                            fill: false,
+                            borderColor: 'black',
+                            lineTension: 0.1
+                    },
+
+
+                        ]
+                },
+
+                        options: {
+                            scales: {
+
+                                xAxes: [{
+
+                                    gridLines: {
+                                        display: false,
+                                    }
+                                }]
+                            },
+
+
+                        },
+                        legend: {
+                            position: 'bottom',
+                                labels: {
+                                padding: 20,
+                                    boxWidth: 15,
+                                        fontFamily: 'system-ui',
+                                            fontColor: 'black',
+                  }
+                        },
+                        layout: {
+                            padding: {
+                                right: 50,
+      
+                  }
+
+                        },
+                        tooltips: {
+                            backgroundColor: '#0584f6',
+                                titleFontSize: 20,
+                                    xPaddding: 20,
+                                        yPadding: 20,
+                                            bodyFontSize: 15,
+                                                bodySpacing: 10,
+                                                    mode: 'x'
+                        },
+                        elements: {
+
+                            line: {
+                                borderWidth: 8,
+                                    fill: false
+
+                            },
+                            point: {
+
+                                radius: 6,
+                                    borderWidth: 4,
+                                        backgroundColor: 'white',
+                                            hoverRadius: 8,
+                                                hoverBorderWidth: 4
+                            }
+                        }
+      
+      
+              });
+      
+            }
+
+                        function renderCharts() {
+
+                            const ctx = document.querySelector('#chart3gprecipitacion').getContext('2d');
+                            totalCasesChart(ctx);
+
+                        }
+
+                        renderCharts();
+
+                    </script>
+
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="myModalet" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title">Cerrar</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered bg-white table-sm">
+                        <thead>
+                            <tr>
+                                <td>Fecha</td>
+                                <td>Evapotranspiración (mm)</td>
+                            </tr>
+
+                        <tbody>
+                            {% for dato in dataGraficasNroHojas %}
+                            <tr>
+                                <td>{{dato.0}}</td>
+                                <td>{{dato.6}}</td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                        </thead>
+                    </table>
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="myModalGraficoet" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog-lg">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title">Cerrar</h5>
+                </div>
+                <div class="modal-body">
+
+                    <canvas id="chart1et" width="50%" height="25vh"></canvas>
+
+                    <script type="module">
+                        function totalCasesChart(ctx) {
+                            //const { temp1, temp2 } = data;
+
+                            const chart = new Chart(ctx, {
+
+                                type: 'line',
+                                data: {
+
+                                    labels: {{ fechasNroHojas| safe}},
+                        datasets: [
+
+                            {
+
+                                label: "Evapotranspiración",
+                                data: {{ et| safe}},
+                            fill: false,
+                            borderColor: 'blue',
+                            lineTension: 0.1
+                },
+
+                        ]
+            },
+
+                        options: {
+                            scales: {
+
+                                xAxes: [{
+
+                                    gridLines: {
+                                        display: false,
+                                    }
+                                }]
+                            },
+
+
+                        },
+                        legend: {
+                            position: 'bottom',
+                                labels: {
+                                padding: 20,
+                                    boxWidth: 15,
+                                        fontFamily: 'system-ui',
+                                            fontColor: 'black',
+              }
+                        },
+                        layout: {
+                            padding: {
+                                right: 50,
+  
+              }
+
+                        },
+                        tooltips: {
+                            backgroundColor: '#0584f6',
+                                titleFontSize: 20,
+                                    xPaddding: 20,
+                                        yPadding: 20,
+                                            bodyFontSize: 15,
+                                                bodySpacing: 10,
+                                                    mode: 'x'
+                        },
+                        elements: {
+
+                            line: {
+                                borderWidth: 8,
+                                    fill: false
+
+                            },
+                            point: {
+
+                                radius: 6,
+                                    borderWidth: 4,
+                                        backgroundColor: 'white',
+                                            hoverRadius: 8,
+                                                hoverBorderWidth: 4
+                            }
+                        }
+  
+  
+          });
+  
+        }
+
+                        function renderCharts() {
+
+                            const ctx = document.querySelector('#chart1et').getContext('2d');
+                            totalCasesChart(ctx);
+
+                        }
+
+                        renderCharts();
+
+                    </script>
+
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 
 </div>

@@ -78,7 +78,7 @@ class FormRiego(FlaskForm):
     Hsuelo = h5fields.IntegerField("Humedad del suelo actual:", widget=h5widgets.NumberInput(min=0, max=100), validators=(DataRequired(),))
 
 class FormHistoricos(FlaskForm):
-    fechaInicio = DateField('Indique la fecha de interés (Los datos que se muestran son a partir de esta a fecha hasta el último registrado):', format='%Y-%m-%d', validators=(DataRequired(),))
+    fechaInicio = DateField('Indique la fecha de interés (Los datos que se muestran son a partir de esta a fecha hasta el último día registrado):', format='%Y-%m-%d', validators=(DataRequired(),))
     
 
 class EnviarEmail(FlaskForm):
