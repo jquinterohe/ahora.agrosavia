@@ -1,5 +1,5 @@
 import math
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, jsonify, render_template, request, redirect, url_for, flash, session
 from werkzeug.exceptions import HTTPException
 
 import bcrypt
@@ -677,17 +677,962 @@ def handle_exception(e):
     flash('Error: Verifique los datos ingresados')
     return render_template("formError.html", e=e), 500 
 
+# @app.before_request
+# def antes_de_cada_peticion():
+#     ruta = request.path
+#     print("ruta solicitada:", ruta)
+#     if not "email" in session  and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña" and '/static/' not in ruta:
+#         print("ruta solicitada en if:", ruta)
+#         print("No se ha iniciado sesión")
+#         flash("Inicia sesión para continuar")
+#         return redirect(url_for('login'))
+#     else:
+#         print("funcionamiento correcto")
+
 @app.before_request
 def antes_de_cada_peticion():
     ruta = request.path
     print("ruta solicitada:", ruta)
-    if not "email" in session  and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña" and '/static/' not in ruta:
+    if not "email" in session and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña"  and ruta != "/addcontador" and ruta != "/getperfil" and ruta != "/addcomments" and ruta != "/getcomments" and ruta != "/addNroHojasHijo" and ruta != "/getNroHojasHijo" and ruta != "/addnrohojas" and ruta != "/getnrohojas" and ruta != "/getestadomet" and ruta != "/addflora" and ruta != "/getflora" and ruta != "/addcosecha" and ruta != "/getcosecha" and ruta != "/addracimo" and ruta != "/getracimo" and ruta != "/addracimoproy" and ruta != "/getracimoproy" and ruta != "/addnutrientes" and ruta != "/getnutrientes" and ruta != "/addriego" and ruta != "/getriego"and ruta != "/addMonitoreo" and ruta != "/getMonitoreo" and '/static/' not in ruta:
         print("ruta solicitada en if:", ruta)
         print("No se ha iniciado sesión")
         flash("Inicia sesión para continuar")
         return redirect(url_for('login'))
     else:
         print("funcionamiento correcto")
+
+#####################################################################################################
+############################## API PARA EL MOVIL ####################################################
+#####################################################################################################
+
+############## FUNCIÓN 1.1 - CÁLCULO DE LA CANTIDAD DEL NÚMERO DE HOJAS PLANTA HIJO ###############
+
+@app.route('/getNroHojasHijo', methods = ['GET'])
+def get_nroHojasHijo():
+    import time
+    from datetime import datetime
+    fechas = session.get('fechas', None)
+    estacion = session.get('estacion', None)
+    print("La fecha elegida es: ", fechas)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    #Cuando el usuario elige otras fechas.
+    valorNroHojas, dataGraficasNroHojas = segundaFuncion.EstimacionNroHojasHijo(fechas, int(label_est))
+
+    valorNroHojas = round(valorNroHojas, 1)
+
+    fechasNroHojas = [row[0] for row in dataGraficasNroHojas]
+    tempPromedioNroHojas = [row[1] for row in dataGraficasNroHojas]
+    gradosDiaNroHojas = [row[2] for row in dataGraficasNroHojas]
+
+    ##valores max y min:
+    temp_max = int(max(tempPromedioNroHojas) + 2)
+    temp_min = int(min(tempPromedioNroHojas) - 2)
+
+    gdd_max = int(max(gradosDiaNroHojas) + 2)
+    gdd_min = int(min(gradosDiaNroHojas) - 2)
+
+    data_dict = []
+    data_gdd = []
+
+    for i, elem in enumerate(fechasNroHojas):
+        dictionary = {}
+        dict_gdd = {}
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+        dictionary['x'] = ux
+        dictionary['y'] = tempPromedioNroHojas[i]
+        dict_gdd['x'] = ux
+        dict_gdd['y'] = gradosDiaNroHojas[i]
+        data_dict.append(dictionary)
+        data_gdd.append(dict_gdd)
+    
+    if len(fechasNroHojas) == 1:
+        fecha_ux = int(time.mktime(datetime.strptime(fechasNroHojas[0], "%d/%m/%Y").timetuple()))
+        print("Solo hay una fecha")
+    else:
+        fecha_ux = ""
+
+    # Los resultados que se van a mostrar en la segunda pantalla del aplicativo.
+    result = [
+                {"fechaCosecha": fechas,
+                "data_dict": data_dict,
+                "data_gdd": data_gdd,
+                "temp_max": temp_max,
+                "temp_min": temp_min,
+                "gdd_max": gdd_max,
+                "gdd_min": gdd_min,
+                "fecha_ux": fecha_ux,
+                "estacion": punto,
+                "valorNroHojas": valorNroHojas,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addNroHojasHijo', methods = ['POST'])
+def add_nroHojasHijo():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['estacion'] = estacion
+
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_nroHojasHijo'))
+
+############## FUNCIÓN 1.2 - CÁLCULO DE LA CANTIDAD DEL NÚMERO DE HOJAS PLANTA MADRE ###############
+
+@app.route('/getnrohojas', methods = ['GET'])
+def get_nrohojas():
+    import time
+    estacion = session.get('estacion', None)
+    days = session.get('days', None)
+
+    #para colombia enviamos la fecha de hoy
+    from datetime import datetime
+    fecha_hoy = datetime.now()
+    date = fecha_hoy.date()
+    fechaFinal = date.strftime("%Y-%m-%d")
+    #Convertimos la fecha desde yy-mm-dd a dd/mm/aa
+    fechaFinal = funcionesGenerales.cambiar_formato_fecha(fechaFinal)
+    print("fechafinal2:", fechaFinal)
+    #Diccionario que contiene las estaciones, en otros se pueden 
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+  
+    if (days.endswith(".0")) or (days.endswith(".")):
+        CantDays = int(float(days))
+    else:       
+        CantDays= int(days)
+
+    #Cálculo de los resultados para mostrar en el aplicativo
+    valor1, data = primeraFuncion.NumeroHojasSemanas(fechaFinal, int(label_est), CantDays)
+    valor1 = round(valor1, 1)
+
+    print("La cantidad de semanas es: ", days)
+
+    fechas = [row[0] for row in data]
+    tempPromedio = [row[1] for row in data]
+    gradosDia = [row[2] for row in data]
+
+    #valores max y min de los parámetros a mostrar en las gráficas.
+    temp_max = int(max(tempPromedio) + 1)
+    temp_min = int(min(tempPromedio) - 1)
+
+    gdd_max = int(max(gradosDia) + 2)
+    gdd_min = int(min(gradosDia) - 2)
+
+    fechaActual = datetime.today()
+    fechaActual = fechaActual.strftime('%d/%m/%Y')
+
+    data_dict = []
+    data_gdd = []
+
+    for i, elem in enumerate(fechas):
+        dictionary = {}
+        dict_gdd = {}
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+        dictionary['x'] = ux
+        dictionary['y'] = tempPromedio[i]
+        dict_gdd['x'] = ux
+        dict_gdd['y'] = gradosDia[i]
+        data_dict.append(dictionary)
+        data_gdd.append(dict_gdd)   
+
+    #Resultados para enviar a la pantalla respuesta del aplicativo.
+    result = [
+        {"nroHojas": valor1,
+        "fechaActual": fechaActual,
+        "semanas": str(days),
+        "estacion": punto,
+        "data_for_plot": data_dict,
+        "data_gdd": data_gdd,
+        "temp_max": temp_max,
+        "temp_min": temp_min,
+        "gdd_max": gdd_max,
+        "gdd_min": gdd_min,
+        }
+        ]
+        
+    return jsonify(result)
+
+@app.route('/addnrohojas', methods = ['POST'])
+def add_nrohojas():
+    days = request.json['days']
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+
+    session['days'] = days
+    session['estacion'] = estacion
+
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_nrohojas'))
+
+################ FUNCIÓN 2.1 - ESTIMACIÓN DE LA FECHA DE FLORACIÓN ########################
+
+@app.route('/getflora', methods = ['GET'])
+def get_floracion():
+    import time
+    from datetime import datetime
+    fechas = session.get('fechas', None)
+    estacion = session.get('estacion', None)
+    print("La fecha elegida es: ", fechas)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    # GRADOS DIA BACKWARD
+    valor1B,valor2B, valor3B, datas = segundaFuncion.EstimacionFechaFloracion(fechas, int(label_est))
+
+    print("El valor de GDD es: ", valor1B)
+
+    fechasBackward = [row[0] for row in datas]#Lista de fechas
+    tempPromedioBackward = [row[1] for row in datas]#Lista de temperatura promedio acorde a las fechas
+    gradosDiaBackward = [row[2] for row in datas]#Lista de grados día acorde a las fechas
+
+    #Valores máximos y mínimos de los parámetros:
+    temp_max_back = int(max(tempPromedioBackward) + 2)
+    temp_min_back = int(min(tempPromedioBackward) - 2)
+
+    gdd_max_back = int(max(gradosDiaBackward) + 40)
+    gdd_min_back = int(min(gradosDiaBackward) - 2)
+
+    data_dict_back = []
+    data_gdd_back = []
+
+    for i, elem in enumerate(fechasBackward):
+        dictionary = {}
+        dict_gdd = {}
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+        dictionary['x'] = ux
+        dictionary['y'] = tempPromedioBackward[i]
+        dict_gdd['x'] = ux
+        dict_gdd['y'] = gradosDiaBackward[i]
+        data_dict_back.append(dictionary)
+        data_gdd_back.append(dict_gdd)
+    
+    result = [
+                {"fechaCosecha": fechas,
+                "fechaFloracion": valor2B,
+                "GDD": valor1B,
+                "semanas": valor3B,
+                "estacion": punto,
+                "data_dict_back": data_dict_back,
+                "data_gdd_back": data_gdd_back,
+                "temp_max_back": temp_max_back,
+                "temp_min_back": temp_min_back,
+                "gdd_max_back": gdd_max_back,
+                "gdd_min_back": gdd_min_back,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addflora', methods = ['POST'])
+def add_floracion():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['estacion'] = estacion
+
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_floracion'))
+
+################ FUNCIÓN 2.2 - ESTIMACIÓN DE LA FECHA DE COSECHA ########################
+
+@app.route('/getcosecha', methods = ['GET'])
+def get_cosecha():
+    import time
+    from datetime import datetime
+    fechas = session.get('fechas', None)
+    estacion = session.get('estacion', None)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    # print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+    
+    # GRADOS DIA FORWARD
+    valor1,valor2, valor3, estimacion, datas, semana_total, temperatura = segundaFuncion.EstimacionFechaCosecha(fechas, int(label_est))
+    valor1 = round(valor1)
+    nroSemanas = round((int(estimacion)/7),1)
+    # print("El valor de GDD es: ", valor1)
+
+
+    fechasForward = [row[0] for row in datas]#lista de fechas obtenidas del cálculo
+    tempPromedioForward = [row[1] for row in datas]#Lista de tempertaura promedio
+    gradosDiaForward = [row[2] for row in datas]#Lista de grados día
+    humedadForward = [row[3] for row in datas]#Lista de humedad
+
+    # sizeFechas = len(fechasForward)
+    # print("La lista de fechas es: ",fechasForward)
+    # print("La cantidad de fechas es: ", str(sizeFechas))
+
+    #Valores máximos y mínimos de los parámetros:
+    temp_max_for = int(max(tempPromedioForward) + 2)
+    temp_min_for = int(min(tempPromedioForward) - 2)
+
+    gdd_max_for = int(max(gradosDiaForward) + 30)
+    gdd_min_for = int(min(gradosDiaForward) - 2)
+
+    hum_max_for = int(max(humedadForward) + 2)
+    hum_min_for = int(min(humedadForward) - 2)
+
+    ## Diccionario para los parámetros:
+    data_dict_for = []
+    data_gdd_for = []
+    data_hum_for = []
+
+    for i, elem in enumerate(fechasForward):
+        dictionary = {}
+        dict_gdd = {}
+        dict_hum = {}
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+        dictionary['x'] = ux
+        dictionary['y'] = tempPromedioForward[i]
+        dict_gdd['x'] = ux
+        dict_gdd['y'] = gradosDiaForward[i]
+        dict_hum['x'] = ux
+        dict_hum['y'] = humedadForward[i]
+        data_dict_for.append(dictionary)
+        data_gdd_for.append(dict_gdd)
+        data_hum_for.append(dict_hum)
+
+    if len(fechasForward) == 1:
+        fecha_ux = int(time.mktime(datetime.strptime(fechasForward[0], "%d/%m/%Y").timetuple()))
+        print("Solo hay una fecha")
+    else:
+        fecha_ux = ""
+
+
+    result = [
+                {"fechaFloracion": valor2,
+                "fechaCosecha": valor3,
+                "GDD": valor1,
+                "diasEstimados": estimacion,
+                "semanas": nroSemanas,
+                "estacion": punto,
+                "semana_total": semana_total, 
+                "temperatura": temperatura,
+                "data_dict_for": data_dict_for,
+                "data_gdd_for": data_gdd_for,
+                "data_hum_for": data_hum_for,
+                "temp_max_for": temp_max_for,
+                "temp_min_for": temp_min_for,
+                "gdd_max_for": gdd_max_for,
+                "gdd_min_for": gdd_min_for,
+                "hum_max_for": hum_max_for,
+                "hum_min_for": hum_min_for,
+                "fecha_ux": fecha_ux,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addcosecha', methods = ['POST'])
+def add_cosecha():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['estacion'] = estacion
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_cosecha'))
+
+
+############## FUNCIÓN 3.1 - PESO DE RACIMO PASADO EN CICLOS ANTERIORES ####################
+
+@app.route('/getracimo', methods = ['GET'])
+def get_racimo():
+    import time
+    from datetime import datetime
+    fechas = session.get('fechas', None)
+    nroManos = session.get('manos', None)
+    denPlant = session.get('denPlant', None)
+    estacion = session.get('estacion', None)
+    print("La fecha elegida es: ", fechas)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    # Cálculo de respuestas para peso de racimo de ciclos anteriores
+    valor1, valor2, valor3, valor4 = terceraFuncion.EstimacionRacimoCicloAnterior(fechas, int(label_est), int(denPlant), int(nroManos))
+    valor2 = round(valor2,2)
+
+    # print("tipo de valor 4 es: ", type(valor2))
+    
+    result = [
+                {
+                "fechaCosecha": valor1,
+                "kgPlanta": valor2,
+                "valor3": valor3,
+                "semanas": valor4,
+                "estacion": punto,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addracimo', methods = ['POST'])
+def add_racimo():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    manos = request.json['manos']
+    denPlant = request.json['matas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['denPlant'] = denPlant
+    session['estacion'] = estacion
+    session['manos'] = manos
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_racimo'))
+
+######################### FUNCIÓN 3.2  - PROYECCIÓN PESO DE RACIMO #########################
+
+@app.route('/getracimoproy', methods = ['GET'])
+def get_racimoproy():
+    fechas = session.get('fechas', None)
+    nroManos = session.get('manos', None)
+    denPlant = session.get('denPlant', None)
+    estacion = session.get('estacion', None)
+    # print("La fecha elegida es: ", fechas)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    # Obtención de valores para responder, frente al cálculo de proyección de peso de racimo
+    fec, fec_final,biomasa_planta, biomasa, estimacion, semanas = terceraFuncion.EstimacionRacimoProyeccion(fechas, int(label_est), int(denPlant), int(nroManos))
+    
+    result = [
+                {
+                "fechaFloracion": fec,
+                "biomasaPlanta": biomasa_planta,
+                "biomasa": biomasa,
+                "estacion": punto,
+                "fec_final": fec_final,
+                "estimacion": estimacion,
+                "semanas": semanas,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addracimoproy', methods = ['POST'])
+def add_racimoproy():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    manos = request.json['manos']
+    denPlant = request.json['matas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['denPlant'] = denPlant
+    session['estacion'] = estacion
+    session['manos'] = manos
+    print("Se ejecuta el POST")
+    print("variable denplant: ", denPlant)
+
+    return redirect(url_for('get_racimoproy'))
+
+############## FUNCIÓN 4 - CANTIDAD DE NUTRIENTES A REPONER ####################
+
+@app.route('/getnutrientes', methods = ['GET'])
+def get_nutrientes():
+    fechas = session.get('fechas', None)
+    denPlant = session.get('denPlant', None)
+    semanasRacimo = session.get('semanasRacimo', None)
+    estacion = session.get('estacion', None)
+    print("La fecha elegida es: ", fechas)
+    
+    if (semanasRacimo.endswith(".0")) or (semanasRacimo.endswith(".")):
+        CantSemanRacimo = int(float(semanasRacimo))
+    else:       
+        CantSemanRacimo = int(semanasRacimo)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    # Obtención de una tupla que contiene las cantidades de cada nutriente a reponer
+    _, _, _, tupla = cuartaFuncion.nutrientes(fechas, int(label_est), int(denPlant), CantSemanRacimo)
+
+    #Se convierte la tupla a lista
+    nutrientesList = [list(row) for row in tupla]
+
+    print("la lista de datos es", nutrientesList)
+    
+    result = [
+                {
+                "nutrientes": nutrientesList,
+                "estacion": punto,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addnutrientes', methods = ['POST'])
+def add_nutrientes():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    denPlant = request.json['matas']
+    semanasRacimo = request.json['semanaRacimo']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['denPlant'] = denPlant
+    session['semanasRacimo'] = semanasRacimo
+    session['estacion'] = estacion
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_nutrientes'))
+
+
+########################## FUNCIÓN 5 - DEMANDA DE RIEGO #########################
+
+@app.route('/getriego', methods = ['GET'])
+def get_riego():
+    import time
+    from datetime import datetime
+    denPlant = session.get('denPlant', None)
+    sisriego = session.get('sisriego', None)
+    densidad = session.get('densidad', None)
+    estacion = session.get('estacion', None)
+    humedad = session.get('humedad', None)
+    #######################################################para colombia enviamos la fecha de hoy
+    fecha_hoy = datetime.now()
+    date = fecha_hoy.date()
+    fechaFinal = date.strftime("%Y-%m-%d")
+    ###################################
+    fechaFinal = funcionesGenerales.cambiar_formato_fecha(fechaFinal)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    # Obtención de respuestas para el cálculo de la demanda de agua
+    Rec_LP, Rec_L_Ha, datas = quintaFuncion.RecomendacionHidrica(fechaFinal, int(label_est), int(denPlant), float(densidad), int(humedad), sisriego)
+
+    # Listas de los parámetros que se usarán para graficar
+    fechasRiego = [row[0] for row in datas]
+    evap = [row[1] for row in datas]
+    rain = [row[2] for row in datas]
+    fechaFinal=datas[-1][0]
+
+    #Valores máximos y mínimos de los parámetros
+    evap_max = int(max(evap) + 2)
+    evap_min = int(min(evap) - 1)
+
+    rain_max = int(max(rain) + 5)
+    rain_min = int(min(rain) - 1)
+
+    ## Diccionario para almacenar los parámetros a graficar
+    data_dict = []
+    data_rain = []
+
+    for i, elem in enumerate(fechasRiego):
+        dictionary = {}
+        dict_rain = {}
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+        dictionary['x'] = ux
+        dictionary['y'] = evap[i]
+        dict_rain['x'] = ux
+        dict_rain['y'] = rain[i]
+        data_dict.append(dictionary)
+        data_rain.append(dict_rain)
+
+    # Data a enviar a la pantalla de respuesta
+    result = [
+                {
+                "densidad": densidad,
+                "valor1": Rec_LP,
+                "valor2": Rec_L_Ha,
+                "estacion": punto,
+                "fechaFinal": fechaFinal,
+                "riego": sisriego,
+                "data_dict": data_dict,
+                "data_rain": data_rain,
+                "evap_max": evap_max,
+                "evap_min": evap_min,
+                "rain_max": rain_max,
+                "rain_min": rain_min,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addriego', methods = ['POST'])
+def add_riego():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    denPlant = request.json['matas']
+    sisriego = request.json['sisriego']
+    humedad = request.json['humedad']
+    densidad = request.json['densidad']
+
+    session['denPlant'] = denPlant
+    session['sisriego'] = sisriego
+    session['humedad'] = humedad
+    session['densidad'] = densidad
+    session['estacion'] = estacion
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_riego'))
+
+##################   VER DATOS HISTÓRICOS: MONITOREO DE VARIABLES CLIMÁTICAS #########################
+
+@app.route('/getMonitoreo', methods = ['GET'])
+def get_MonitoreoClima():
+    import time
+    from datetime import datetime
+    fechas = session.get('fechas', None)
+    estacion = session.get('estacion', None)
+    print("La fecha elegida es: ", fechas)
+
+    #DICCIONARIO QUE CONTIENE LAS ESTACIONES
+    dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
+    label_estaciones = {"fundación": "1", "otras": "2"}
+
+    punto = dict_estaciones[estacion]
+    print("la estación es: ", punto)
+    label_est = label_estaciones[estacion]
+
+    #SE EXTRAEN LOS DATOS DE TODAS LAS VARIABLES CLIMÁTICAS
+    dataGraficasNroHojas = funcionesGenerales.historicos(fechas, int(label_est))
+    fechasNroHojas = [row[0] for row in dataGraficasNroHojas]
+    temp = [row[1] for row in dataGraficasNroHojas]
+    humedad = [row[2] for row in dataGraficasNroHojas]
+    viento = [row[3] for row in dataGraficasNroHojas]
+    radiacion = [row[4] for row in dataGraficasNroHojas]
+    precipitacion = [row[5] for row in dataGraficasNroHojas]
+    et = [row[6] for row in dataGraficasNroHojas]
+
+
+    ##valores max y min:
+    temp_max = int(max(temp) + 2)
+    temp_min = int(min(temp) - 2)
+
+    hum_max = int(max(humedad) + 2)
+    hum_min = int(min(humedad) - 2)
+
+    velViento_max = int(max(viento) + 2)
+    velViento_min = int(min(viento) - 2)
+
+    rad_max = int(max(radiacion) + 100)
+    rad_min = int(min(radiacion) - 2)
+
+    rain_max = int(max(precipitacion) + 5)
+    rain_min = int(min(precipitacion) - 2)
+
+    evt_max = int(max(et) + 2)
+    evt_min = int(min(et) - 2)
+
+    #Diccionarios vacíos
+    data_temp = []
+    data_hum = []
+    data_velViento = []
+    data_rad = []
+    data_rain = []
+    data_evt = []
+
+    for i, elem in enumerate(fechasNroHojas):
+        dict_temp = {}
+        dict_hum = {}
+        dict_velViento = {}
+        dict_rad = {}
+        dict_rain = {}
+        dict_evt = {}
+
+        ux = int(time.mktime(datetime.strptime(elem, "%d/%m/%Y").timetuple()))
+
+        dict_temp['x'] = ux
+        dict_temp['y'] = temp[i]
+        dict_hum['x'] = ux
+        dict_hum['y'] = humedad[i]
+        dict_velViento['x'] = ux
+        dict_velViento['y'] = viento[i]
+        dict_rad['x'] = ux
+        dict_rad['y'] = radiacion[i]
+        dict_rain['x'] = ux
+        dict_rain['y'] = precipitacion[i]
+        dict_evt['x'] = ux
+        dict_evt['y'] = et[i]
+
+        data_temp.append(dict_temp)
+        data_hum.append(dict_hum)
+        data_velViento.append(dict_velViento)
+        data_rad.append(dict_rad)
+        data_rain.append(dict_rain)
+        data_evt.append(dict_evt)
+    
+    if len(fechasNroHojas) == 1:
+        fecha_ux = int(time.mktime(datetime.strptime(fechasNroHojas[0], "%d/%m/%Y").timetuple()))
+        print("Solo hay una fecha")
+    else:
+        fecha_ux = ""
+
+    # Los resultados que se van a mostrar en la segunda pantalla del aplicativo.
+    result = [
+                {"fechaCosecha": fechas,
+                "data_temp": data_temp,
+                "data_hum": data_hum,
+                "data_velViento": data_velViento,
+                "data_rad": data_rad,
+                "data_rain": data_rain,
+                "data_evt": data_evt,
+                "temp_max": temp_max,
+                "temp_min": temp_min,
+                "hum_max": hum_max,
+                "hum_min": hum_min,
+                "velViento_max": velViento_max,
+                "velViento_min": velViento_min,
+                "rad_max": rad_max,
+                "rad_min": rad_min,
+                "rain_max": rain_max,
+                "rain_min": rain_min,
+                "evt_max": evt_max,
+                "evt_min": evt_min,
+                "fecha_ux": fecha_ux,
+                "estacion": punto,
+                }
+            ]
+
+    return jsonify(result)
+
+@app.route('/addMonitoreo', methods = ['POST'])
+def add_MonitoreoClima():
+    estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    fechas = request.json['fechas']
+    fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
+
+    session['fechas'] = fechas
+    session['estacion'] = estacion
+
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_MonitoreoClima'))
+
+######################################################
+######################################################
+
+
+############## COMENTARIOS Y SUGERENCIAS DE USUARIOS #######################
+
+
+# # correo_send = 'labsac2022@gmail.com'
+# # correo_send = 'userahoracolombia@labsac.com'
+correo_sender = 'apis2back@gmail.com'#Este correo debe ser de el administrador principal del aplicativo, para recibir los mensajes que los usuarios envién por medio del aplicativo.
+
+@app.route('/addcomments', methods = ['POST'])
+def add_comments():
+    mail = Mail(app)
+    correo_send  = correo_sender
+    usuario = request.json['usuario']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
+    correo = request.json['mail']
+    grupo = request.json['grupo']
+    comentario = request.json['descripcion']
+
+    #  Cuerpo del mensaje
+    mensaje = 'Usuario: ' + usuario + '\n' + 'Email: ' + correo + '\n' + 'Asociación: ' + grupo + '\n' + 'Dispositivo: Móvil' + '\n' +  'Mensaje: ' + comentario
+
+    print(mensaje)
+    ## ENVIAR Email
+    msg = Message("Sugerencias y consultas - °AHora", sender=correo_send, recipients=[correo_send])
+    msg.body = mensaje
+    mail.send(msg)
+
+    print("Mensaje enviado")
+    # session['fechas'] = fechas
+    session['usuario'] = usuario
+    session['correo'] = correo
+    session['grupo'] = grupo
+    session['comentario'] = comentario
+    print("Se ejecuta el POST")
+
+    return redirect(url_for('get_comments'))
+
+#La ruta get para comments no devuelve ningún valor, pero se coloca para que la ruta post funcione correctamente.
+@app.route('/getcomments', methods = ['GET'])
+def get_comments():
+    import time
+    from datetime import datetime
+    # fechas = session.get('fechas', None)
+    usuario = session.get('usuario', None)
+    correo = session.get('correo', None)
+    grupo = session.get('grupo', None)
+    comentario = session.get('comentario', None)
+
+    result = [
+                {
+                }
+            ]
+
+    return jsonify(result)
+
+######################################################
+###########    CONTADOR VISITAS  #####################
+######################################################
+
+@app.route('/addcontador', methods = ['POST'])
+def add_contador():
+    from datetime import timezone
+    visita = request.json['counterVisit']
+    fecha_visita = request.json['fechaHoy']
+    fecha_visita_utc = request.json['fecha_utc']
+    nombre_usuario = request.json['nombres']
+    mail_usuario = request.json['email']
+    primer_apellido = request.json['apellido_paterno']
+    segundo_apellido = request.json['apellido_materno']
+    ocupacion = request.json['ocupacion']
+    asociacion = request.json['asociacion']
+    fecNacimiento = request.json['fecNacimiento']
+
+    # utc_fecha = str(fecha_visita_utc)
+
+    print(visita)
+    session['visita'] = visita
+    session['fecha_visita'] = fecha_visita
+    session['nombre_usuario'] = nombre_usuario
+    session['mail_usuario'] = mail_usuario
+    session['primer_apellido'] = primer_apellido
+    session['segundo_apellido'] = segundo_apellido
+    session['ocupacion'] = ocupacion
+    session['asociacion'] = asociacion
+    session['fecNacimiento_usuario'] = fecNacimiento
+
+    datetime_fecha = datetime.strptime(fecha_visita, '%d/%m/%y %H:%M:%S')
+
+    fecha_utc = datetime.now(timezone.utc)
+    # datetime_fecha = datetime.strptime(utc_fecha, '%Y-%m-%dT%H:%M:%SZ')
+    print("tipo de utc: ", fecha_visita_utc)
+
+    dispositivo = 'Móvil'
+
+    print(str(nombre_usuario) + " ha visitado el aplicativo " + str(visita) + " vez, el día " + str(fecha_visita) + " mediante su " + str(dispositivo))
+
+    coleccion_V = baseDatos[MONGO_COLECCION_V]
+
+    coleccion_V.insert_one(funcionesGenerales.Visita_movil(mail_usuario))
+
+    print("Su correo es: ", mail_usuario)
+    print("Fecha datetime: ", datetime_fecha)
+    print("Fecha utc: ", fecha_utc)
+    print("NAME USUARIO: ", nombre_usuario)
+    print("Fecha de nacimiento es: ", fecNacimiento)
+
+    return redirect(url_for('get_perfil'))
+
+
+@app.route('/getperfil', methods = ['GET'])
+def get_perfil():
+    import time
+    from datetime import datetime
+    # fechas = session.get('fechas', None)
+    visita = session.get('visita', None)
+    fecha_visita = session.get('fecha_visita', None)
+    fecha_visita_utc = session.get('fecha_visita_utc', None)
+    nombre_usuario = session.get('nombre_usuario', None)
+    mail_usuario = session.get('mail_usuario', None)
+    primer_apellido = session.get('primer_apellido', None)
+    segundo_apellido = session.get('segundo_apellido', None)
+    ocupacion = session.get('ocupacion', None)
+    asociacion = session.get('asociacion', None)
+    fecNacimiento = session.get('fecNacimiento_usuario', None)
+
+    print("NAME USUARIO: ", nombre_usuario)
+
+    apellidos = str(primer_apellido) + " " + str(segundo_apellido)
+
+    if " " in nombre_usuario:
+        string_list = nombre_usuario.split()
+        name = string_list[0]
+    else:
+        name = nombre_usuario
+
+    texto_de_avatar = str(name) + " " + str(primer_apellido)
+
+    if "-" in fecNacimiento:
+        dl1 = fecNacimiento.split("-")
+        dateOfBirth = dl1[2] + "/" + dl1[1] + "/" + dl1[0]
+    else:
+        dl1 = fecNacimiento.split("/")
+
+        d1 = int(dl1[0])
+        m1 = int(dl1[1])
+
+        if d1 < 10:
+            day = "0" + str(d1)
+        else:
+            day = str(d1)
+        
+        if m1 < 10:
+            month = "0" + str(m1)
+        else:
+            month = str(m1)
+
+        dateOfBirth = day + "/" + month + "/" + dl1[2]
+
+    print("Fecha de nacimiento en PERFIL ES: ", dateOfBirth)
+    
+    result = [
+                {
+                "texto_de_avatar": texto_de_avatar,
+                "nombre_usuario": nombre_usuario,
+                "apellidos": apellidos,
+                "mail_usuario": mail_usuario,
+                "ocupacion": ocupacion,
+                "asociacion": asociacion,
+                "dateOfBirth": dateOfBirth,
+                }
+            ]
+
+    return jsonify(result)
+
+######################################################################
 
 import funcionesGenerales
 import primeraFuncion
@@ -704,5 +1649,8 @@ from forms import EnviarEmail
 from forms import FormIndicadoresHojas
 from forms import FormHistoricos
 
+# if __name__ == '__main__':
+#     app.run(port=5000, debug=True)
+
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='172.20.31.172',port=5000, debug=True)

@@ -3,6 +3,14 @@ def cambiar_formato_fecha(fecha):
 
     return '{}{}{}{}{}'.format(partes_fecha[2],'/', partes_fecha[1],'/', partes_fecha[0])
 
+
+def cambiar_formato_fecha_movil(fecha):
+    partes_fecha = fecha.split('/')
+
+    return '{}{}{}{}{}'.format(partes_fecha[1],'/', partes_fecha[0],'/20', partes_fecha[2])
+
+###############################################################
+
 from App import baseDatos, coleccion
 def estaciones(Id_estacion):
     dict_estaciones = {"1":"Fundación","2":"otras"}
@@ -64,7 +72,10 @@ def Visita(mail):
     visitas = {"Visita": 1,"usuario": mail ,"Tipo":"Aplicativo web" ,"Fecha_utc": datetime.utcnow(), "Fecha_local": datetime.now()}
     return visitas
 
-
+def Visita_movil(mail):
+    from datetime import datetime
+    visitas = {"Visita": 1,"usuario": mail ,"Tipo":"Móvil" ,"Fecha_utc": datetime.utcnow(), "Fecha_local": datetime.now()}
+    return visitas
 
 def generate_random_string():
     import random
