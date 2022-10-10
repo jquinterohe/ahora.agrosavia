@@ -1649,8 +1649,5 @@ from forms import EnviarEmail
 from forms import FormIndicadoresHojas
 from forms import FormHistoricos
 
-# if __name__ == '__main__':
-#     app.run(port=5000, debug=True)
-
 if __name__ == '__main__':
-    app.run(host='172.20.31.172',port=5000, debug=True)
+    app.run(port=5000, debug=True)
