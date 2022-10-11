@@ -63,7 +63,7 @@ class FormBiomasa(FlaskForm):
     fechaFloracion = DateField('Fecha de la floración más reciente:', format='%Y-%m-%d', validators=(DataRequired(),))
     fechaCosecha = DateField('Indique la fecha de la última cosecha realizada, para calcular el peso potencial que debió alcanzar el racimo:', format='%Y-%m-%d', validators=(DataRequired(),))
     rPa = h5fields.IntegerField("Densidad de plantas de banano por hectárea (1500-2200):", widget=h5widgets.NumberInput(min=1500, max=2200), validators=(DataRequired(),))
-    Cant_manos = h5fields.IntegerField("Número de manos:", widget=h5widgets.NumberInput(min=5, max=13), validators=(DataRequired(),))
+    Cant_manos = h5fields.IntegerField("Número de manos:", widget=h5widgets.NumberInput(min=5, max=12), validators=(DataRequired(),))
 
 
 class FormNutrientes(FlaskForm):
