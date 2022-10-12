@@ -1584,6 +1584,7 @@ def get_perfil():
     fecNacimiento = session.get('fecNacimiento_usuario', None)
 
     print("NAME USUARIO: ", nombre_usuario)
+    print("fecha de naciemiento es: ", fecNacimiento)
 
     apellidos = str(primer_apellido) + " " + str(segundo_apellido)
 

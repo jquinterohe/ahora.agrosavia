@@ -117,7 +117,7 @@ def nutrientes(fec, estacion, rPA, semanas):
     masaFe= round((((biomasa_planta*1000)*3.88)/(1000*1000)),2)
     masaCu = round((((biomasa_planta*1000)*0.77)/(1000*1000)),2)
     masaMn = round((((biomasa_planta*1000)*1.23)/(1000*1000)),2)
-    masaSn = round((((biomasa_planta*1000)*1.12)/(1000*1000)),2)
+    masaZn = round((((biomasa_planta*1000)*1.12)/(1000*1000)),2)
     masaB = round((((biomasa_planta*1000)*1.37)/(1000*1000)),2)
 
     """ print("masaN:",masaN)
@@ -129,7 +129,7 @@ def nutrientes(fec, estacion, rPA, semanas):
     print("masaFe:",masaFe) 
     print("masaCu:",masaCu) 
     print("masaMn:",masaMn) 
-    print("masaSn:",masaSn) 
+    print("masaZn:",masaZn) 
     print("masaB:",masaB) """ 
 
     masaN_hectarea = round((masaN*rPA/1000),2)
@@ -141,7 +141,7 @@ def nutrientes(fec, estacion, rPA, semanas):
     masaFe_hectarea= round((masaFe*rPA/1000),2)
     masaCu_hectarea = round((masaCu*rPA/1000),2)
     masaMn_hectarea = round((masaMn*rPA/1000),2)
-    masaSn_hectarea = round((masaSn*rPA/1000),2)
+    masaZn_hectarea = round((masaZn*rPA/1000),2)
     masaB_hectarea = round((masaB*rPA/1000),2)
 
     """ print("masaN_hectarea:",masaN_hectarea)
@@ -153,12 +153,12 @@ def nutrientes(fec, estacion, rPA, semanas):
     print("masaFe_hectarea:",masaFe_hectarea) 
     print("masaCu_hectarea:",masaCu_hectarea) 
     print("masaMn_hectarea:",masaMn_hectarea) 
-    print("masaSn_hectarea:",masaSn_hectarea) 
+    print("masaZn_hectarea:",masaZn_hectarea) 
     print("masaB_hectarea:",masaB_hectarea) """
 
-    tupla1 = ("N","P", "K", "Ca", "Mg", "S", "Fe", "Cu", "Mn", "Sn", "B")
-    tupla2= (masaN,masaP, masaK,masaCa, masaMg,masaS,masaFe,masaCu,masaMn,masaSn,masaB)
-    tupla3=(masaN_hectarea,masaP_hectarea,masaK_hectarea,masaCa_hectarea,masaMg_hectarea,masaS_hectarea,masaFe_hectarea,masaCu_hectarea,masaMn_hectarea,masaSn_hectarea,masaB_hectarea)
+    tupla1 = ("N","P", "K", "Ca", "Mg", "S", "Fe", "Cu", "Mn", "Zn", "B")
+    tupla2= (masaN,masaP, masaK,masaCa, masaMg,masaS,masaFe,masaCu,masaMn,masaZn,masaB)
+    tupla3=(masaN_hectarea,masaP_hectarea,masaK_hectarea,masaCa_hectarea,masaMg_hectarea,masaS_hectarea,masaFe_hectarea,masaCu_hectarea,masaMn_hectarea,masaZn_hectarea,masaB_hectarea)
     tupla=[]
     for k in range(0,11):
         #print("valor de k:",k)
