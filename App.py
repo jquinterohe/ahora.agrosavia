@@ -814,12 +814,12 @@ def get_nrohojas():
     label_est = label_estaciones[estacion]
   
     if (days.endswith(".0")) or (days.endswith(".")):
-        CantDays = int(float(days))
+        CantSemanas = int(float(days))
     else:       
-        CantDays= int(days)
+        CantSemanas= int(days)
 
     #Cálculo de los resultados para mostrar en el aplicativo
-    valor1, data = primeraFuncion.NumeroHojasSemanas(fechaFinal, int(label_est), CantDays)
+    valor1, data = primeraFuncion.NumeroHojasSemanas(fechaFinal, int(label_est), CantSemanas)
     valor1 = round(valor1, 1)
 
     print("La cantidad de semanas es: ", days)
@@ -887,9 +887,9 @@ def add_nrohojas():
 def get_floracion():
     import time
     from datetime import datetime
-    fechas = session.get('fechas', None)
+    fechaCosecha = session.get('fechas', None)
     estacion = session.get('estacion', None)
-    print("La fecha elegida es: ", fechas)
+    print("La fecha elegida es: ", fechaCosecha)
 
     #DICCIONARIO QUE CONTIENE LAS ESTACIONES
     dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
@@ -900,9 +900,9 @@ def get_floracion():
     label_est = label_estaciones[estacion]
 
     # GRADOS DIA BACKWARD
-    valor1B,valor2B, valor3B, datas = segundaFuncion.EstimacionFechaFloracion(fechas, int(label_est))
+    gda,fecha_floracion, nsemanas, datas = segundaFuncion.EstimacionFechaFloracion(fechaCosecha, int(label_est))
 
-    print("El valor de GDD es: ", valor1B)
+    print("El valor de GDA es: ", gda)
 
     fechasBackward = [row[0] for row in datas]#Lista de fechas
     tempPromedioBackward = [row[1] for row in datas]#Lista de temperatura promedio acorde a las fechas
@@ -930,10 +930,10 @@ def get_floracion():
         data_gdd_back.append(dict_gdd)
     
     result = [
-                {"fechaCosecha": fechas,
-                "fechaFloracion": valor2B,
-                "GDD": valor1B,
-                "semanas": valor3B,
+                {"fechaCosecha": fechaCosecha,
+                "fechaFloracion": fecha_floracion,
+                "GDA": gda,
+                "semanas": nsemanas,
                 "estacion": punto,
                 "data_dict_back": data_dict_back,
                 "data_gdd_back": data_gdd_back,
@@ -950,6 +950,7 @@ def get_floracion():
 def add_floracion():
     estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
     fechas = request.json['fechas']
+
     fechas = funcionesGenerales.cambiar_formato_fecha_movil(fechas)
 
     session['fechas'] = fechas
@@ -965,7 +966,7 @@ def add_floracion():
 def get_cosecha():
     import time
     from datetime import datetime
-    fechas = session.get('fechas', None)
+    fechaFloracion = session.get('fechas', None)
     estacion = session.get('estacion', None)
 
     #DICCIONARIO QUE CONTIENE LAS ESTACIONES
@@ -977,8 +978,8 @@ def get_cosecha():
     label_est = label_estaciones[estacion]
     
     # GRADOS DIA FORWARD
-    valor1,valor2, valor3, estimacion, datas, semana_total, temperatura = segundaFuncion.EstimacionFechaCosecha(fechas, int(label_est))
-    valor1 = round(valor1)
+    gda,fecha_floracion, fecha_cosecha, estimacion, datas, semana_total, temperatura = segundaFuncion.EstimacionFechaCosecha(fechaFloracion, int(label_est))
+    gda = round(gda)
     nroSemanas = round((int(estimacion)/7),1)
     # print("El valor de GDD es: ", valor1)
 
@@ -1030,9 +1031,9 @@ def get_cosecha():
 
 
     result = [
-                {"fechaFloracion": valor2,
-                "fechaCosecha": valor3,
-                "GDD": valor1,
+                {"fechaFloracion": fecha_floracion,
+                "fechaCosecha": fecha_cosecha,
+                "GDA": gda,
                 "diasEstimados": estimacion,
                 "semanas": nroSemanas,
                 "estacion": punto,
@@ -1072,11 +1073,11 @@ def add_cosecha():
 def get_racimo():
     import time
     from datetime import datetime
-    fechas = session.get('fechas', None)
+    fechaCosecha = session.get('fechas', None)
     nroManos = session.get('manos', None)
-    denPlant = session.get('denPlant', None)
+    denPlantas = session.get('denPlant', None)
     estacion = session.get('estacion', None)
-    print("La fecha elegida es: ", fechas)
+    print("La fecha elegida es: ", fechaCosecha)
 
     #DICCIONARIO QUE CONTIENE LAS ESTACIONES
     dict_estaciones = {"fundación": "FUNDACIÓN", "otras": "OTRAS"}
@@ -1086,18 +1087,18 @@ def get_racimo():
     print("la estación es: ", punto)
     label_est = label_estaciones[estacion]
 
-    # Cálculo de respuestas para peso de racimo de ciclos anteriores
-    valor1, valor2, valor3, valor4 = terceraFuncion.EstimacionRacimoCicloAnterior(fechas, int(label_est), int(denPlant), int(nroManos))
-    valor2 = round(valor2,2)
+        # Cálculo de respuestas para peso de racimo de ciclos anteriores
+    fec_cosecha, biomasa_planta, biomasa, semanas = terceraFuncion.EstimacionRacimoCicloAnterior(fechaCosecha, int(label_est), int(denPlantas), int(nroManos))
+    biomasa_planta = round(biomasa_planta,2)
 
     # print("tipo de valor 4 es: ", type(valor2))
     
     result = [
                 {
-                "fechaCosecha": valor1,
-                "kgPlanta": valor2,
-                "valor3": valor3,
-                "semanas": valor4,
+                "fechaCosecha": fec_cosecha,
+                "kgPlanta": biomasa_planta,
+                "valor3": biomasa,
+                "semanas": semanas,
                 "estacion": punto,
                 }
             ]
@@ -1124,9 +1125,9 @@ def add_racimo():
 
 @app.route('/getracimoproy', methods = ['GET'])
 def get_racimoproy():
-    fechas = session.get('fechas', None)
+    fechaFloracion = session.get('fechas', None)
     nroManos = session.get('manos', None)
-    denPlant = session.get('denPlant', None)
+    denPlantas = session.get('denPlant', None)
     estacion = session.get('estacion', None)
     # print("La fecha elegida es: ", fechas)
 
@@ -1139,7 +1140,7 @@ def get_racimoproy():
     label_est = label_estaciones[estacion]
 
     # Obtención de valores para responder, frente al cálculo de proyección de peso de racimo
-    fec, fec_final,biomasa_planta, biomasa, estimacion, semanas = terceraFuncion.EstimacionRacimoProyeccion(fechas, int(label_est), int(denPlant), int(nroManos))
+    fec, fec_final,biomasa_planta, biomasa, estimacion, semanas = terceraFuncion.EstimacionRacimoProyeccion(fechaFloracion, int(label_est), int(denPlantas), int(nroManos))
     
     result = [
                 {
@@ -1176,11 +1177,11 @@ def add_racimoproy():
 
 @app.route('/getnutrientes', methods = ['GET'])
 def get_nutrientes():
-    fechas = session.get('fechas', None)
-    denPlant = session.get('denPlant', None)
+    fechaCosecha = session.get('fechas', None)
+    denPlantas = session.get('denPlant', None)
     semanasRacimo = session.get('semanasRacimo', None)
     estacion = session.get('estacion', None)
-    print("La fecha elegida es: ", fechas)
+    print("La fecha elegida es: ", fechaCosecha)
     
     if (semanasRacimo.endswith(".0")) or (semanasRacimo.endswith(".")):
         CantSemanRacimo = int(float(semanasRacimo))
@@ -1196,7 +1197,7 @@ def get_nutrientes():
     label_est = label_estaciones[estacion]
 
     # Obtención de una tupla que contiene las cantidades de cada nutriente a reponer
-    _, _, _, tupla = cuartaFuncion.nutrientes(fechas, int(label_est), int(denPlant), CantSemanRacimo)
+    _, _, _, tupla = cuartaFuncion.nutrientes(fechaCosecha, int(label_est), int(denPlantas), CantSemanRacimo)
 
     #Se convierte la tupla a lista
     nutrientesList = [list(row) for row in tupla]
@@ -1235,7 +1236,7 @@ def add_nutrientes():
 def get_riego():
     import time
     from datetime import datetime
-    denPlant = session.get('denPlant', None)
+    denPlantas = "2000"
     sisriego = session.get('sisriego', None)
     densidad = session.get('densidad', None)
     estacion = session.get('estacion', None)
@@ -1256,7 +1257,7 @@ def get_riego():
     label_est = label_estaciones[estacion]
 
     # Obtención de respuestas para el cálculo de la demanda de agua
-    Rec_LP, Rec_L_Ha, datas = quintaFuncion.RecomendacionHidrica(fechaFinal, int(label_est), int(denPlant), float(densidad), int(humedad), sisriego)
+    Rec_LP, Rec_L_Ha, datas = quintaFuncion.RecomendacionHidrica(fechaFinal, int(label_est), int(denPlantas), float(densidad), int(humedad), sisriego)
 
     # Listas de los parámetros que se usarán para graficar
     fechasRiego = [row[0] for row in datas]
@@ -1309,12 +1310,12 @@ def get_riego():
 @app.route('/addriego', methods = ['POST'])
 def add_riego():
     estacion = request.json['estacion']#La etiqueta debe llamarse igual como se ha definido los estados en el archivo .js
-    denPlant = request.json['matas']
+    # denPlant = request.json['matas']
     sisriego = request.json['sisriego']
     humedad = request.json['humedad']
     densidad = request.json['densidad']
 
-    session['denPlant'] = denPlant
+    # session['denPlant'] = denPlant
     session['sisriego'] = sisriego
     session['humedad'] = humedad
     session['densidad'] = densidad
