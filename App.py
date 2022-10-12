@@ -24,7 +24,7 @@ app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'apis2back@gmail.com'
-app.config['MAIL_PASSWORD'] = 'bgjqofsrolmpjftf'
+app.config['MAIL_PASSWORD'] = 'fbjtkajygwlxnvbl'
 
 #  Conectamos a la base datos de mongo
 MONGO_HOST = "200.48.235.251"   ##cambiar por localhost (127.0.0.1)
