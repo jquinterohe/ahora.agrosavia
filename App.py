@@ -1521,9 +1521,6 @@ def get_comments():
 @app.route('/addcontador', methods = ['POST'])
 def add_contador():
     from datetime import timezone
-    visita = request.json['counterVisit']
-    fecha_visita = request.json['fechaHoy']
-    fecha_visita_utc = request.json['fecha_utc']
     nombre_usuario = request.json['nombres']
     mail_usuario = request.json['email']
     primer_apellido = request.json['apellido_paterno']
@@ -1534,9 +1531,6 @@ def add_contador():
 
     # utc_fecha = str(fecha_visita_utc)
 
-    print(visita)
-    session['visita'] = visita
-    session['fecha_visita'] = fecha_visita
     session['nombre_usuario'] = nombre_usuario
     session['mail_usuario'] = mail_usuario
     session['primer_apellido'] = primer_apellido
@@ -1545,22 +1539,18 @@ def add_contador():
     session['asociacion'] = asociacion
     session['fecNacimiento_usuario'] = fecNacimiento
 
-    datetime_fecha = datetime.strptime(fecha_visita, '%d/%m/%y %H:%M:%S')
 
     fecha_utc = datetime.now(timezone.utc)
-    # datetime_fecha = datetime.strptime(utc_fecha, '%Y-%m-%dT%H:%M:%SZ')
-    print("tipo de utc: ", fecha_visita_utc)
 
     dispositivo = 'Móvil'
 
-    print(str(nombre_usuario) + " ha visitado el aplicativo " + str(visita) + " vez, el día " + str(fecha_visita) + " mediante su " + str(dispositivo))
+    print(str(nombre_usuario) + " ha visitado el aplicativo, el día " + str(fecha_utc) + " mediante su " + str(dispositivo))
 
     coleccion_V = baseDatos[MONGO_COLECCION_V]
 
     coleccion_V.insert_one(funcionesGenerales.Visita_movil(mail_usuario))
 
     print("Su correo es: ", mail_usuario)
-    print("Fecha datetime: ", datetime_fecha)
     print("Fecha utc: ", fecha_utc)
     print("NAME USUARIO: ", nombre_usuario)
     print("Fecha de nacimiento es: ", fecNacimiento)
@@ -1572,10 +1562,7 @@ def add_contador():
 def get_perfil():
     import time
     from datetime import datetime
-    # fechas = session.get('fechas', None)
-    visita = session.get('visita', None)
-    fecha_visita = session.get('fecha_visita', None)
-    fecha_visita_utc = session.get('fecha_visita_utc', None)
+    #Se obtienen datos de la pantalla Home
     nombre_usuario = session.get('nombre_usuario', None)
     mail_usuario = session.get('mail_usuario', None)
     primer_apellido = session.get('primer_apellido', None)
@@ -1597,6 +1584,7 @@ def get_perfil():
 
     texto_de_avatar = str(name) + " " + str(primer_apellido)
 
+    #Función para ordenar las fechas de dd-mm-aaaa a dd/mm/aaaa o viceversa
     if "-" in fecNacimiento:
         dl1 = fecNacimiento.split("-")
         dateOfBirth = dl1[2] + "/" + dl1[1] + "/" + dl1[0]
@@ -1651,5 +1639,8 @@ from forms import EnviarEmail
 from forms import FormIndicadoresHojas
 from forms import FormHistoricos
 
+# if __name__ == '__main__':
+#     app.run(port=5000, debug=True)
+
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="172.20.31.172", port=5000, debug=True)
