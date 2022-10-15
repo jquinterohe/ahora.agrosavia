@@ -1037,8 +1037,6 @@ def get_cosecha():
                 "diasEstimados": estimacion,
                 "semanas": nroSemanas,
                 "estacion": punto,
-                "semana_total": semana_total, 
-                "temperatura": temperatura,
                 "data_dict_for": data_dict_for,
                 "data_gdd_for": data_gdd_for,
                 "data_hum_for": data_hum_for,
@@ -1098,7 +1096,6 @@ def get_racimo():
                 "fechaCosecha": fec_cosecha,
                 "kgPlanta": biomasa_planta,
                 "valor3": biomasa,
-                "semanas": semanas,
                 "estacion": punto,
                 }
             ]
@@ -1290,11 +1287,9 @@ def get_riego():
     # Data a enviar a la pantalla de respuesta
     result = [
                 {
-                "densidad": densidad,
                 "valor1": Rec_LP,
                 "valor2": Rec_L_Ha,
                 "estacion": punto,
-                "fechaFinal": fechaFinal,
                 "riego": sisriego,
                 "data_dict": data_dict,
                 "data_rain": data_rain,
@@ -1418,7 +1413,7 @@ def get_MonitoreoClima():
 
     # Los resultados que se van a mostrar en la segunda pantalla del aplicativo.
     result = [
-                {"fechaCosecha": fechas,
+                {
                 "data_temp": data_temp,
                 "data_hum": data_hum,
                 "data_velViento": data_velViento,
@@ -1644,3 +1639,6 @@ from forms import FormHistoricos
 
 if __name__ == '__main__':
     app.run(host="172.20.31.172", port=5000, debug=True)
+
+# if __name__ == '__main__':
+#     app.run(host="172.20.10.4", port=5000, debug=True)
