@@ -196,7 +196,8 @@
     <hr class="sidebar-divider">
     
     <li class="nav-link text-center">
-        <a  href="{{ url_for('logout')}}" class="btn btn-purple" role="button">
+        <a  href="{{ url_for('logout')}}" class="btn btn-purple" role="button" onclick="sessionStorage.clear()
+        ">
             <i class="fa-solid fa-right-from-bracket"></i>
             Salir</a>
     </li>

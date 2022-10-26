@@ -34,12 +34,14 @@ MONGO_USER = "estacionescolombia"  ##cambiar por root
 MONGO_TIEMPO_FUERA = 10000
 MONGO_BASEDATOS = "PROYECTOC" ##cambiar por nombre de la BD
 MONGO_COLECCION = "users"
+MONGO_ALERT_COLECCION = "ALERTAS"
 MONGO_URI = "mongodb://" + MONGO_USER + ":" + MONGO_PWD + \
     "@"+MONGO_HOST + ":" + MONGO_PUERTO + "/" + MONGO_BASEDATOS
 
 client = MongoClient(MONGO_URI)
 baseDatos = client[MONGO_BASEDATOS]
 coleccion = baseDatos[MONGO_COLECCION]
+alert_coleccion = baseDatos[MONGO_ALERT_COLECCION ]
 # colección para registrar las visitas
 MONGO_COLECCION_V = "VISITAS"
 ##
@@ -239,12 +241,55 @@ def ActContraseña():
             flash("La contraseña fue actualizada correctamente")
         return redirect(url_for("usuario"))
 
+def unix_to_string(unix_date):
+    time_datetime = datetime.fromtimestamp(unix_date)
+    # time_datetime = datetime.fromtimestamp(1646150400)
+    fecha_date = time_datetime.date()#En formato date
+    fecha_str = str(fecha_date.day)+'/'+str(fecha_date.month)+'/'+str(fecha_date.year)#Se ha convertido a formato string
+    # print("Se ha impreso: ", fecha_str)
+
+    return fecha_str
 
 @app.route('/home')
 def home():
+    import time
     if "email" in session:
         email = session["email"]
-        return render_template('home.html', email=email)
+
+        #Get the actual date in Unix (porque de esa manera las fechas de solo una unidad son 1/3/2022, lo que no se quiere es que sea 01/03/2022)
+        current_unix_time = int(time.time())
+        # time_datetime = datetime.fromtimestamp(current_unix_time)
+        # # time_datetime = datetime.fromtimestamp(1646150400)
+        # fecha_date = time_datetime.date()#En formato date
+        # fecha_str = str(fecha_date.day)+'/'+str(fecha_date.month)+'/'+str(fecha_date.year)#Se ha convertido a formato string
+        # print("Se ha impreso: ", fecha_str)
+
+        fecha_str = unix_to_string(current_unix_time)
+
+        dics = alert_coleccion.find({"fecha": fecha_str, 'intervalo': 'hora'})
+        data = []
+        for doc in dics:
+            data.append(doc)
+        print("###########DATA HOME ES: ", data)
+
+        #Cuando se envía notificación de día, siempre es del día anterior.
+        day_before = int(time.time()) - 86400
+        fecha_str_before = unix_to_string(day_before)
+
+        # dics_day = alert_coleccion.find({"fecha": "16/10/2022", 'intervalo': 'dia'})
+        dics_day = alert_coleccion.find({"fecha": fecha_str_before, 'intervalo': 'dia'})
+        data_day = []
+        for doc in dics_day:
+            data_day.append(doc)
+        print("->>>>>>>>>DATA DAY ES: ", data_day)
+
+        # Se convierten los idccionarios en tuplas:
+        mensaje_hour = [tuple(d.values()) for d in data]
+        mensaje_day = [tuple(d.values()) for d in data_day]
+
+        print("MENSAJE: ", mensaje_hour)
+
+        return render_template('home.html', email=email, mensaje_hour=mensaje_hour, mensaje_day=mensaje_day)
     else:
         return redirect(url_for("login"))
 
@@ -362,6 +407,7 @@ def viewHojasHijo():
         # nuevo
         valorNroHojas, dataGraficasNroHojas = segundaFuncion.EstimacionNroHojasHijo(
             fechaCosecha, int(estacion))
+        # print("---->>> DATA GRAFICAS: ", dataGraficasNroHojas)
         session['valorNroHojas'] = str(valorNroHojas)
         session['dataGraficasNroHojas'] = dataGraficasNroHojas
         fechasNroHojas = [row[0] for row in dataGraficasNroHojas]
@@ -1634,11 +1680,11 @@ from forms import EnviarEmail
 from forms import FormIndicadoresHojas
 from forms import FormHistoricos
 
-# if __name__ == '__main__':
-#     app.run(port=5000, debug=True)
-
 if __name__ == '__main__':
-    app.run(host="172.20.31.172", port=5000, debug=True)
+    app.run(port=5000, debug=True)
+
+# if __name__ == '__main__':
+#     app.run(host="172.20.31.172", port=5000, debug=True)
 
 # if __name__ == '__main__':
 #     app.run(host="172.20.10.4", port=5000, debug=True)

@@ -42,6 +42,73 @@
       </div>
     </div>
   </div>
+
+  <!-- Button trigger modal -->
+  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Launch demo modal
+  </button> -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="align-items: flex-end;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Alerta de parámetros meteorológicos</h5>
+          <button type="button" id="closeBtn" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <p>Notificación actual</p> -->
+          <!-- <hr> -->
+          {% if mensaje_day or mensaje_hour|length %}
+
+          {% for msg in mensaje_hour %}
+          <div class="alert alert-info" role="alert">
+              {{msg.7}} el día {{msg.3}} a las {{msg.8}} horas, su valor fue de {{msg.6}}.
+          </div>
+          {% endfor %}
+
+          <!-- <div class="alert alert-success" role="alert">
+            {{msg}} el día 20/10/2022.
+          </div> -->
+
+          <!-- <div class="alert alert-danger" role="alert">
+            This is a danger alert—check it out!
+          </div> -->
+          <!-- <p>Noticación promedio del día anterior.</p> -->
+          <hr>
+
+          {% for msg in mensaje_day %}
+          <div class="alert alert-warning" role="alert">
+              {{msg.7}} el {{msg.3}}, su valor fue {{msg.6}}.
+          </div>
+          {% endfor %}
+
+          {% else %}
+                <div class="text-center">
+                  <img src="/static/assets/img/check-96.png" alt="">
+                </div>
+              
+              <p class="text-center"></p>
+              <p class="text-center">Todo bien! sin novedades.</p>
+          {% endif %}
+
+          <!-- <div class="alert alert-warning" role="alert">
+            This is a warning alert—check it out!
+          </div>
+          <div class="alert alert-info" role="alert">
+            This is a info alert—check it out!
+          </div> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="okButton" class="btn btn-info" data-dismiss="modal">Continuar</button>
+          <!-- <button type="button" class="btn btn-secondary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- End of Main Content -->
   {% include "includes/footer-fullscreen.html" %}
 
@@ -65,5 +132,101 @@
 
   });
 </script>
+
+<!-- Shows every time open Home screen -->
+<!-- <script type="text/javascript">
+  $('#modalAlert').modal('show')
+</script> -->
+
+<!-- <script type="text/javascript">
+  if($.cookie('prepare') != 'seen'){
+      $.cookie('prepare', 'seen', { expires: 365, path: '/home' }); // Set it to last a year, for example.
+      setTimeout(function(){
+           $('#modalAlert').modal('show');
+          }, 1000);
+      $('#closemodal').click(function() // You are clicking the close button
+      {
+          $('#modalAlert').modal('hide'); // Now the pop up is hiden.
+      });
+      $('#modalAlert').click(function(e) 
+          {
+          $('#modalAlert').fadeOut(); 
+      });
+  };
+</script> -->
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+
+    setTimeout(showModal, 1000);
+
+    // sessionStorage.setItem('alreadyShow', 'not shown');
+    var is_already_show = sessionStorage.getItem('alreadyShow');
+
+    // var is_already_show = sessionStorage.getItem('alreadyShow');
+
+    function showModal(){
+
+      // sessionStorage.setItem('alreadyShow', 'not shown');
+
+      // var is_already_show = sessionStorage.getItem('alreadyShow');
+
+      // let is_already_show = sessionStorage.getItem('alreadyShow');
+      console.log("First log: ",is_already_show);
+      if(is_already_show != 'already shown'){
+        // sessionStorage.setItem('alreadyShow', 'already shown')
+        $('#modalAlert').modal('show');
+        sessionStorage.setItem('alreadyShow', 'already shown');
+        // $('#modalAlert').show();
+        console.log("Second log: ",is_already_show);
+      } else {
+        console.log(is_already_show);
+        // sessionStorage.setItem('alreadyShow', 'not shown');
+      }
+      
+    }
+
+    $("#closeBtn").click(function(){
+      // $("#modalAlert").hide();
+      $('#modalAlert').modal('hide');
+      sessionStorage.setItem('alreadyShow', 'already shown');
+    })
+
+    $("#okButton").click(function(){
+      // $("#modalAlert").hide();
+      $('#modalAlert').modal('hide');
+      sessionStorage.setItem('alreadyShow', 'already shown');
+    })
+    
+  });
+</script> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"> 
+</script>
+  
+<script type="text/javascript">
+ $(document).ready(function() {
+     setTimeout(showModal, 1000);
+
+    function showModal(){
+
+     if (sessionStorage.getItem('#modalAlert') !== 'true') {
+         $('#modalAlert').modal('show');
+         sessionStorage.setItem('#modalAlert','true');     
+        //  Para Eliminar las credenciales que se ha iniciado sesión, en el archivo sidebar.html, en LOGOUT, se ha añadido la función sessionStorage.clear(). Para que cuando se cierre sesión. Se reinicie el mesaje de alerta.
+     }
+    }
+
+     $("#closeBtn").click(function(){
+      $('#modalAlert').modal('hide');
+    })
+
+    $("#okButton").click(function(){
+      $('#modalAlert').modal('hide');
+    })
+ });
+</script>
+
+
 
 {% endblock javascripts %}
