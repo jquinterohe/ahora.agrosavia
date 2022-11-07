@@ -65,7 +65,7 @@
 
           {% for msg in mensaje_hour %}
           <div class="alert alert-info" role="alert">
-              {{msg.7}} el día {{msg.3}} a las {{msg.8}} horas, su valor fue de {{msg.6}}.
+              {{msg.9}} el día {{msg.4}} a las {{msg.10}} horas en la estación {{msg.2}}, su valor fue de {{msg.7}}{{msg.8}}.
           </div>
           {% endfor %}
 
@@ -81,7 +81,7 @@
 
           {% for msg in mensaje_day %}
           <div class="alert alert-warning" role="alert">
-              {{msg.7}} el {{msg.3}}, su valor fue {{msg.6}}.
+              {{msg.9}} el {{msg.4}} en la estación {{msg.2}}, su valor fue {{msg.7}}{{msg.8}}.
           </div>
           {% endfor %}
 

@@ -739,7 +739,7 @@ def handle_exception(e):
 def antes_de_cada_peticion():
     ruta = request.path
     print("ruta solicitada:", ruta)
-    if not "email" in session and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña"  and ruta != "/addcontador" and ruta != "/getperfil" and ruta != "/addcomments" and ruta != "/getcomments" and ruta != "/addNroHojasHijo" and ruta != "/getNroHojasHijo" and ruta != "/addnrohojas" and ruta != "/getnrohojas" and ruta != "/getestadomet" and ruta != "/addflora" and ruta != "/getflora" and ruta != "/addcosecha" and ruta != "/getcosecha" and ruta != "/addracimo" and ruta != "/getracimo" and ruta != "/addracimoproy" and ruta != "/getracimoproy" and ruta != "/addnutrientes" and ruta != "/getnutrientes" and ruta != "/addriego" and ruta != "/getriego"and ruta != "/addMonitoreo" and ruta != "/getMonitoreo" and '/static/' not in ruta:
+    if not "email" in session and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña"  and ruta != "/addcontador" and ruta != "/getnotify" and ruta != "/getperfil" and ruta != "/addcomments" and ruta != "/getcomments" and ruta != "/addNroHojasHijo" and ruta != "/getNroHojasHijo" and ruta != "/addnrohojas" and ruta != "/getnrohojas" and ruta != "/getestadomet" and ruta != "/addflora" and ruta != "/getflora" and ruta != "/addcosecha" and ruta != "/getcosecha" and ruta != "/addracimo" and ruta != "/getracimo" and ruta != "/addracimoproy" and ruta != "/getracimoproy" and ruta != "/addnutrientes" and ruta != "/getnutrientes" and ruta != "/addriego" and ruta != "/getriego"and ruta != "/addMonitoreo" and ruta != "/getMonitoreo" and '/static/' not in ruta:
         print("ruta solicitada en if:", ruta)
         print("No se ha iniciado sesión")
         flash("Inicia sesión para continuar")
@@ -1598,6 +1598,46 @@ def add_contador():
 
     return redirect(url_for('get_perfil'))
 
+@app.route('/getnotify', methods = ['GET'])
+def get_notify():
+    # from bson.objectid import ObjectId
+    import time
+    #Get the actual date in Unix (porque de esa manera las fechas de solo una unidad son 1/3/2022, lo que no se quiere es que sea 01/03/2022)
+    current_unix_time = int(time.time())
+
+    fecha_str = unix_to_string(current_unix_time)
+
+    dics = alert_coleccion.find({"fecha": fecha_str, 'intervalo': 'hora'})
+    data = []
+    #Convertir pymongo format a diccionario.
+    for doc in dics:
+        data.append(doc)
+    print("###########DATA HOME ES: ", data)
+
+    #Cuando se envía notificación de día, siempre es del día anterior.
+    day_before = int(time.time()) - 86400
+    fecha_str_before = unix_to_string(day_before)
+
+    # dics_day = alert_coleccion.find({"fecha": "16/10/2022", 'intervalo': 'dia'})
+    dics_day = alert_coleccion.find({"fecha": fecha_str_before, 'intervalo': 'dia'})
+    data_day = []
+    #Convertir pymongo format a diccionario.
+    for doc in dics_day:
+        data_day.append(doc)
+    print("->>>>>>>>>DATA DAY ES: ", data_day)
+
+    # data_tot = x1 + x2
+    data_tot = data + data_day
+
+    # Se cambian los valores de ObjectId a string, para que no hayan errores.
+    for n in data_tot:
+        el1 = n['_id']
+        n['_id'] = str(el1)
+
+    print("DATA TOTAL NOTIF: ", data_tot)
+
+    return jsonify(data_tot)
+
 
 @app.route('/getperfil', methods = ['GET'])
 def get_perfil():
@@ -1680,11 +1720,11 @@ from forms import EnviarEmail
 from forms import FormIndicadoresHojas
 from forms import FormHistoricos
 
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
-
 # if __name__ == '__main__':
-#     app.run(host="172.20.31.172", port=5000, debug=True)
+#     app.run(port=5000, debug=True)
+
+if __name__ == '__main__':
+    app.run(host="192.168.34.54", port=5000, debug=True)
 
 # if __name__ == '__main__':
 #     app.run(host="172.20.10.4", port=5000, debug=True)
