@@ -29,7 +29,7 @@ from email.mime.multipart import MIMEMultipart
 
 #Enviar correo a usuarios notificando una alerta
 #Dar formato a la etiqueta de estación
-dict_estaciones = {"1": "FUNDACION", "2": "OTRAS"}
+dict_estaciones = {"1": "FUNDACIÓN", "2": "OTRAS"}
 ALERT_COLECCION = "ALERTAS"
 #Crendenciales GMAIL
 # from_address = "apis2back@gmail.com"
