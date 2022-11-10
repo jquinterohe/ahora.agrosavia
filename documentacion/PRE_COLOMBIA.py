@@ -23,12 +23,13 @@ import pymongo
 from pymongo import MongoClient
 from bson.json_util import dumps, loads 
 
-MONGO_HOST = "127.0.0.1"
+# MONGO_HOST = "127.0.0.1"
+MONGO_HOST = "192.168.34.10"
 MONGO_PUERTO ="27017"
-MONGO_PWD = "ciba1515323232"
+MONGO_PWD = "ciba15153232"
 MONGO_USER = "root"
 MONGO_TIEMPO_FUERA =10000
-MONGO_BASEDATOS = "PROYECTO"
+MONGO_BASEDATOS = "PROYECTOC"
 MONGO_COLECCION = "ESTACIONES"
 
 MONGO_URI = "mongodb://"+ MONGO_USER +":"+ MONGO_PWD + "@"+MONGO_HOST +":" + MONGO_PUERTO + "/"
