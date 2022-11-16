@@ -590,7 +590,6 @@ def formHidrica():
 def viewHidricaDemanda():
     if request.method == 'POST':
         estacion = request.form['cmbEstacion']
-        rPa = request.form['rPa']
         dAparente = request.form['dAparente']
         Hsuelo = request.form['Hsuelo']
         riego = request.form['cmbRiego']
@@ -599,7 +598,6 @@ def viewHidricaDemanda():
         date = fecha_hoy.date()
         fechaFinal = date.strftime("%Y-%m-%d")
         ###################################
-        session['rPa'] = rPa
         session['dAparente'] = dAparente
         session['Hsuelo'] = Hsuelo
         session['riego'] = riego
@@ -610,7 +608,7 @@ def viewHidricaDemanda():
         estacionName = dict_estaciones[estacion]  # BUSCA LA ESTACION
         session['estacionName'] = estacionName
         Rec_LP, Rec_L_Ha, data = quintaFuncion.RecomendacionHidrica(
-            fechaFinal, int(estacion), int(rPa), float(dAparente), int(Hsuelo), riego)
+            fechaFinal, int(estacion), float(dAparente), int(Hsuelo), riego)
         session['data'] = data
         fechas = [row[0] for row in data]
         evap = [row[1] for row in data]
@@ -1279,7 +1277,6 @@ def add_nutrientes():
 def get_riego():
     import time
     from datetime import datetime
-    denPlantas = "2000"
     sisriego = session.get('sisriego', None)
     densidad = session.get('densidad', None)
     estacion = session.get('estacion', None)
@@ -1300,7 +1297,7 @@ def get_riego():
     label_est = label_estaciones[estacion]
 
     # Obtención de respuestas para el cálculo de la demanda de agua
-    Rec_LP, Rec_L_Ha, datas = quintaFuncion.RecomendacionHidrica(fechaFinal, int(label_est), int(denPlantas), float(densidad), int(humedad), sisriego)
+    Rec_LP, Rec_L_Ha, datas = quintaFuncion.RecomendacionHidrica(fechaFinal, int(label_est), float(densidad), int(humedad), sisriego)
 
     # Listas de los parámetros que se usarán para graficar
     fechasRiego = [row[0] for row in datas]

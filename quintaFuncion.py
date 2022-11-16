@@ -70,7 +70,7 @@ def BD_MONGO_RIEGO(pais, estacion, fec_unix_usuario):
         return("Fallo al conectarse a mongodb" + errorConnexion)
 
 
-def RecomendacionHidrica(fec, estacion, rPa, dAparente, Hsuelo, tipo_riego):
+def RecomendacionHidrica(fec, estacion, dAparente, Hsuelo, tipo_riego):
     pais = 2  #colombia
     ##datos de entrada
     area_planta = 1
